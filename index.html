@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Kash</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=192&q=80">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        luxuryDark: '#0B0C10',
+                        glassBg: 'rgba(30, 31, 41, 0.45)',
+                        glassBorder: 'rgba(255, 255, 255, 0.05)',
+                        accentPurple: '#9D8DF2',
+                        accentGreen: '#34c759',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #0B0C15;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .premium-glass {
+            background: linear-gradient(180deg, rgba(35, 36, 48, 0.6) 0%, rgba(20, 21, 28, 0.45) 100%);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            box-shadow: inset 0 1px 0px rgba(255, 255, 255, 0.1), 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .ambient-orb {
+            position: fixed;
+            top: 25%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 450px; height: 450px;
+            background: radial-gradient(circle, rgba(157, 141, 242, 0.07) 0%, rgba(11, 12, 21, 0) 70%);
+            filter: blur(50px);
+            z-index: -1; pointer-events: none;
+        }
+
+        .grid-pattern {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.015) 1.2px, transparent 1.2px);
+            background-size: 36px 36px;
+        }
+
+        .shine-effect { position: relative; overflow: hidden; }
+        .shine-effect::after {
+            content: ''; position: absolute;
+            top: -50%; left: -60%; width: 30%; height: 200%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(30deg); transition: 0.8s; opacity: 0;
+        }
+        .shine-effect:active::after { left: 130%; opacity: 1; transition: 0s; }
+
+        .bottom-sheet {
+            transform: translateY(105%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .bottom-sheet.open { transform: translateY(0); }
+
+        .btn-press { transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1); will-change: transform; }
+        .btn-press:active { transform: scale(0.97); }
+
+        .wallet-glow-bank * {
+            color: #34c759 !important;
+            text-shadow: 0 0 14px rgba(52, 199, 89, 0.45);
+        }
+
+        .wallet-glow-cash * {
+            color: #f59e0b !important;
+            text-shadow: 0 0 14px rgba(245, 158, 11, 0.45);
+        }
+
+        .wallet-glow-bkash * {
+            color: #ec4899 !important;
+            text-shadow: 0 0 14px rgba(236, 72, 153, 0.45);
+        }
+
+        .wallet-glow-nagad * {
+            color: #f97316 !important;
+            text-shadow: 0 0 14px rgba(249, 115, 22, 0.45);
+        }
+
+        .custom-scroll::-webkit-scrollbar { width: 0px; }
+    </style>
+</head>
+<body class="text-white grid-pattern relative flex flex-col justify-between select-none">
+
+    <div class="ambient-orb"></div>
+
+    <div id="toast" class="fixed top-14 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 scale-95 transition-all duration-300 premium-glass px-5 py-2.5 rounded-full text-xs font-medium flex items-center gap-2 border border-white/10 shadow-xl">
+        <span id="toastIcon">✨</span>
+        <span id="toastMessage">Logged</span>
+    </div>
+
+    <div class="relative z-10 w-full max-w-md mx-auto px-6 pt-12 flex flex-col h-screen overflow-hidden">
+        
+        <header class="flex justify-between items-center py-5 shrink-0">
+            <button onclick="triggerHaptic('tick'); document.getElementById('aboutSheet').classList.add('open')" class="flex flex-col items-start gap-0.5 btn-press text-left group">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 shrink-0">
+                        <svg viewBox="0 0 787.3 787.3" xmlns="http://www.w3.org/2000/svg" class="w-full h-full"><path fill="white" d="m694.65,0H92.66C41.48,0,0,41.48,0,92.66v601.99c0,51.17,41.48,92.66,92.66,92.66h601.99c51.17,0,92.66-41.48,92.66-92.66V92.66c0-51.17-41.48-92.66-92.66-92.66Zm-360.6,634.25h-153.45V155.41h153.45v478.84Zm53.9,0v-180c10.19-1.76,20.66-2.69,31.35-2.69,100.89,0,182.69,81.79,182.69,182.69h-214.04Zm214.04-350.57l-214.04,138.5v-138.5l214.04-128.27v128.27Z"/></svg>
+                    </div>
+                    <h1 class="text-2xl font-semibold tracking-tight text-white">Kash</h1>
+                </div>
+                <p class="text-[11px] tracking-wider uppercase text-zinc-500 font-bold mt-0.5" id="liveDate">Wednesday, 22 Aug</p>
+            </button>
+            <div class="flex gap-3">
+                <button onclick="showSyncOptions()" class="w-11 h-11 rounded-full premium-glass flex items-center justify-center btn-press">
+                    <span id="syncCloudIndicator" class="text-base">☁️</span>
+                </button>
+                <button onclick="triggerHaptic('tick'); document.getElementById('donateSheet').classList.add('open')" class="w-11 h-11 rounded-full premium-glass flex items-center justify-center btn-press">
+                    <span class="text-base">💵</span>
+                </button>
+                <button onclick="triggerHaptic('success'); document.getElementById('logSheet').classList.add('open'); setLogType(appState.currentLogType || 'bd')" class="w-11 h-11 rounded-full bg-white text-black flex items-center justify-center font-bold text-lg btn-press shadow-xl">
+                    ＋
+                </button>
+            </div>
+        </header>
+
+        <main class="flex-grow overflow-y-auto custom-scroll space-y-6 pb-24">
+            <section class="flex flex-col items-center justify-center py-4 relative">
+                <div id="primaryAuraOrb" class="relative w-44 h-44 rounded-full flex flex-col items-center justify-center transition-all duration-500" 
+                     style="background: radial-gradient(circle, rgba(157, 141, 242, 0.12) 0%, rgba(14, 15, 23, 0.8) 80%); box-shadow: inset 0 0 25px rgba(157, 141, 242, 0.15); border: 1px solid rgba(157, 141, 242, 0.15);">
+                    <svg class="absolute inset-0 w-full h-full -rotate-90">
+                        <circle cx="88" cy="88" r="82" stroke="rgba(255, 255, 255, 0.015)" stroke-width="2.5" fill="transparent" />
+                        <circle id="orbProgressArc" cx="88" cy="88" r="82" stroke="#9D8DF2" stroke-width="2.5" fill="transparent" stroke-dasharray="515" stroke-dashoffset="515" stroke-linecap="round" class="transition-all duration-500 ease-out" />
+                    </svg>
+                    <div class="text-center z-10 px-4">
+                        <span id="activeOrbLogo" class="text-xl block mb-0.5">🏦</span>
+                        <span id="activeOrbWalletName" class="text-[10px] uppercase tracking-widest text-zinc-400 font-bold">BANK</span>
+                        <div class="text-xl font-bold tracking-tight text-white mt-0.5" id="activeOrbBalance">৳ 0</div>
+                        <span id="activeOrbPercentage" class="text-[9px] mt-1 inline-block bg-white/5 px-2 py-0.5 rounded-full text-zinc-400 font-medium">0% of total</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="px-0.5">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-[11px] uppercase tracking-widest text-zinc-500 font-bold">Wallets</h2>
+                    <span class="text-[10px] bg-white/5 text-zinc-400 px-2.5 py-0.5 rounded-full font-medium" id="combinedAssetsTotal">Total Asset: ৳ 0</span>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div onclick="selectActiveWallet('bank')" id="walletCard-bank" class="wallet-card premium-glass rounded-2xl p-4 flex flex-col justify-between h-28 relative overflow-hidden btn-press cursor-pointer">
+                        <div class="flex justify-between items-center w-full"><span class="text-sm font-semibold text-zinc-300 tracking-wide">Bank</span><span class="text-emerald-400 text-sm">🏦</span></div>
+                        <div class="mt-auto"><span class="text-[9px] text-zinc-500 block uppercase font-bold tracking-wider">Balance</span><span class="text-[19px] font-bold tracking-tight text-white mt-0.5 block" id="bal-bank">৳ 0</span></div>
+                    </div>
+                    <div onclick="selectActiveWallet('cash')" id="walletCard-cash" class="wallet-card premium-glass rounded-2xl p-4 flex flex-col justify-between h-28 relative overflow-hidden btn-press cursor-pointer">
+                        <div class="flex justify-between items-center w-full"><span class="text-sm font-semibold text-zinc-300 tracking-wide">Cash</span><span class="text-amber-400 text-sm">💵</span></div>
+                        <div class="mt-auto"><span class="text-[9px] text-zinc-500 block uppercase font-bold tracking-wider">Balance</span><span class="text-[19px] font-bold tracking-tight text-white mt-0.5 block" id="bal-cash">৳ 0</span></div>
+                    </div>
+                    <div onclick="selectActiveWallet('bkash')" id="walletCard-bkash" class="wallet-card premium-glass rounded-2xl p-4 flex flex-col justify-between h-28 relative overflow-hidden btn-press cursor-pointer">
+                        <div class="flex justify-between items-center w-full"><span class="text-sm font-semibold text-zinc-300 tracking-wide">bKash</span><span class="text-pink-500 text-sm">📱</span></div>
+                        <div class="mt-auto"><span class="text-[9px] text-zinc-500 block uppercase font-bold tracking-wider">Balance</span><span class="text-[19px] font-bold tracking-tight text-white mt-0.5 block" id="bal-bkash">৳ 0</span></div>
+                    </div>
+                    <div onclick="selectActiveWallet('nagad')" id="walletCard-nagad" class="wallet-card premium-glass rounded-2xl p-4 flex flex-col justify-between h-28 relative overflow-hidden btn-press cursor-pointer">
+                        <div class="flex justify-between items-center w-full"><span class="text-sm font-semibold text-zinc-300 tracking-wide">Nagad</span><span class="text-orange-400 text-sm">🍊</span></div>
+                        <div class="mt-auto"><span class="text-[9px] text-zinc-500 block uppercase font-bold tracking-wider">Balance</span><span class="text-[19px] font-bold tracking-tight text-white mt-0.5 block" id="bal-nagad">৳ 0</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="px-0.5">
+                <div class="premium-glass rounded-2xl p-4 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-base" style="background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.15);">📆</div>
+                        <div>
+                            <p class="text-[9px] uppercase tracking-widest text-zinc-500 font-bold">Total Spent This Month</p>
+                            <p class="text-lg font-bold tracking-tight text-amber-400 mt-0.5" id="monthlySpentTotal">৳ 0</p>
+                        </div>
+                    </div>
+                    <span class="text-[9px] text-zinc-600 uppercase font-bold tracking-wider" id="monthlySpentLabel"></span>
+                </div>
+            </section>
+
+            <section class="px-0.5">
+                <div class="flex justify-between items-center mb-3.5">
+                    <h2 class="text-[11px] uppercase tracking-widest text-zinc-500 font-bold">Activity Feed</h2>
+                    <button onclick="clearAllDataPrompt()" class="text-[9px] text-red-400/60 hover:text-red-400 transition-colors uppercase tracking-wider font-bold">Reset Ledger</button>
+                </div>
+                <div id="activityFeedContainer" class="space-y-3"></div>
+            </section>
+        </main>
+    </div>
+
+    <div id="logSheet" class="bottom-sheet fixed bottom-0 left-0 right-0 z-40 premium-glass rounded-t-[32px] border-t border-white/10 p-6 shadow-[0_-20px_50px_rgba(0,0,0,0.8)] max-w-md mx-auto">
+        <div class="w-12 h-1 bg-white/10 rounded-full mx-auto mb-5" onclick="document.getElementById('logSheet').classList.remove('open')"></div>
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-base font-semibold tracking-tight">Add New Log</h3>
+            <button onclick="triggerHaptic('tick'); document.getElementById('logSheet').classList.remove('open')" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-xs">✕</button>
+        </div>
+
+        <form id="logForm" onsubmit="saveEntry(event)" class="space-y-4">
+            <div class="grid grid-cols-3 gap-2 bg-white/5 p-1 rounded-xl">
+                <button type="button" onclick="setLogType('bd')" id="type-bd" class="py-2.5 rounded-lg text-xs font-semibold transition-all duration-300 btn-press bg-accentPurple text-black">Balance B/D</button>
+                <button type="button" onclick="setLogType('income')" id="type-income" class="py-2.5 rounded-lg text-xs font-semibold transition-all duration-300 btn-press text-zinc-400">Incoming</button>
+                <button type="button" onclick="setLogType('expense')" id="type-expense" class="py-2.5 rounded-lg text-xs font-semibold transition-all duration-300 btn-press text-zinc-400">Expense</button>
+            </div>
+
+            <div class="flex gap-3">
+                <div class="flex-grow bg-white/5 rounded-xl border border-white/5 p-3">
+                    <label class="block text-[9px] text-zinc-500 uppercase tracking-widest font-bold mb-1">Amount (৳)</label>
+                    <input type="number" id="logAmount" placeholder="0.00" pattern="[0-9]*" inputmode="decimal" required class="bg-transparent w-full font-bold text-xl text-white outline-none">
+                </div>
+                <div class="w-2/5 bg-white/5 rounded-xl border border-white/5 p-3 relative">
+                    <label class="block text-[9px] text-zinc-500 uppercase tracking-widest font-bold mb-1">Account</label>
+                    <select id="logWallet" class="bg-transparent w-full font-semibold text-sm text-white outline-none cursor-pointer appearance-none">
+                        <option value="bank">Bank</option>
+                        <option value="cash">Cash</option>
+                        <option value="bkash">bKash</option>
+                        <option value="nagad">Nagad</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="logNoteWrapper" class="bg-white/5 rounded-xl border border-white/5 p-3">
+                <label class="block text-[9px] text-zinc-500 uppercase tracking-widest font-bold mb-1">Transaction Label</label>
+                <input type="text" id="logNote" placeholder="e.g. Freelance project, Coffee" class="bg-transparent w-full text-sm text-white outline-none">
+            </div>
+
+            <div>
+                <label class="block text-[9px] text-zinc-500 uppercase tracking-widest font-bold mb-1.5">Fast Amounts</label>
+                <div class="flex gap-2 overflow-x-auto pb-1" id="quickPillContainer">
+                    <button type="button" onclick="applyQuickAmount(100)" class="pill px-4 py-2 bg-white/5 hover:bg-white/10 rounded-xl text-xs font-semibold shrink-0 btn-press">৳ 100</button>
+                    <button type="button" onclick="applyQuickAmount(500)" class="pill px-4 py-2 bg-white/5 hover:bg-white/10 rounded-xl text-xs font-semibold shrink-0 btn-press">৳ 500</button>
+                    <button type="button" onclick="applyQuickAmount(1000)" class="pill px-4 py-2 bg-white/5 hover:bg-white/10 rounded-xl text-xs font-semibold shrink-0 btn-press">৳ 1,000</button>
+                    <button type="button" onclick="applyQuickAmount(5000)" class="pill px-4 py-2 bg-white/5 hover:bg-white/10 rounded-xl text-xs font-semibold shrink-0 btn-press">৳ 5,000</button>
+                </div>
+            </div>
+
+            <button type="submit" class="shine-effect w-full py-4 rounded-xl bg-white text-black font-bold text-sm tracking-wide shadow-lg btn-press">COMMIT TO DESK</button>
+        </form>
+    </div>
+
+    <!-- About Sheet -->
+    <div id="aboutSheet" class="bottom-sheet fixed bottom-0 left-0 right-0 z-40 premium-glass rounded-t-[32px] border-t border-white/10 p-6 pb-10 shadow-[0_-20px_50px_rgba(0,0,0,0.8)] max-w-md mx-auto" style="max-height: 85vh; overflow-y: auto;">
+        <div class="w-12 h-1 bg-white/10 rounded-full mx-auto mb-5 cursor-pointer" onclick="triggerHaptic('tick'); document.getElementById('aboutSheet').classList.remove('open')"></div>
+        <div class="flex justify-between items-center mb-6">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 shrink-0"><svg viewBox="0 0 787.3 787.3" xmlns="http://www.w3.org/2000/svg" class="w-full h-full"><path fill="white" d="m694.65,0H92.66C41.48,0,0,41.48,0,92.66v601.99c0,51.17,41.48,92.66,92.66,92.66h601.99c51.17,0,92.66-41.48,92.66-92.66V92.66c0-51.17-41.48-92.66-92.66-92.66Zm-360.6,634.25h-153.45V155.41h153.45v478.84Zm53.9,0v-180c10.19-1.76,20.66-2.69,31.35-2.69,100.89,0,182.69,81.79,182.69,182.69h-214.04Zm214.04-350.57l-214.04,138.5v-138.5l214.04-128.27v128.27Z"/></svg></div>
+                <div>
+                    <h3 class="text-base font-semibold tracking-tight leading-none">About Kash</h3>
+                    <p class="text-[10px] text-zinc-500 uppercase tracking-widest font-bold mt-0.5">Built by Necessity</p>
+                </div>
+            </div>
+            <button onclick="triggerHaptic('tick'); document.getElementById('aboutSheet').classList.remove('open')" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-xs shrink-0">✕</button>
+        </div>
+
+        <div class="space-y-4 text-sm text-zinc-300 leading-relaxed">
+            <p>Kash began with a simple question: <span class="text-white font-medium">Why is tracking money so complicated?</span></p>
+
+            <p>As a 21-year-old student in Dhaka, I found myself frustrated by the lack of clean, efficient tools to manage my finances. Everything felt cluttered or bloated. The turning point came when I watched my girlfriend struggle to track her expenses in a standard notes app, it was manual, disconnected, and clearly not designed for the way we live today.</p>
+
+            <p>I realized there wasn't a tool that offered the simplicity I wanted, so I decided to build one. With zero prior coding experience, a lot of curiosity, and the vast resources of the internet, I designed Kash.</p>
+
+            <div class="premium-glass rounded-2xl p-4 border border-white/5 space-y-1.5">
+                <p class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mb-2">What is Kash?</p>
+                <p>A personal finance manager built for the modern, fast-paced life in Bangladesh. It bridges the gap between your <span class="text-blue-400 font-medium">Bank Account</span>, mobile wallets like <span class="text-pink-400 font-medium">bKash</span> and <span class="text-orange-400 font-medium">Nagad</span>, and physical cash all within a sleek, glassmorphism inspired interface.</p>
+            </div>
+
+            <p>I'm currently building and refining this as a <span class="text-accentPurple font-medium">Progressive Web App (PWA)</span> to ensure it stays fast and accessible to everyone without the barriers of traditional app stores.</p>
+
+            <p class="text-zinc-400">Kash isn't just a project, it's a solution born from my own need for clarity and a testament to what you can build when you decide to stop waiting for someone else to solve the problem.</p>
+
+            <div class="flex flex-col gap-3">
+                <a href="https://www.instagram.com/air.dw/" target="_blank" rel="noreferrer noopener" class="inline-flex items-center justify-center gap-2 self-start rounded-full border border-white/10 bg-white/5 px-4 py-2 text-[11px] font-semibold uppercase tracking-widest text-pink-400 transition hover:bg-white/10 hover:text-white">
+                    <span>Contact</span>
+                </a>
+                <div class="pt-2 border-t border-white/5 flex items-center justify-between">
+                    <p class="text-[11px] text-zinc-600 italic">— Kash by <span class="text-zinc-400 not-italic font-medium">air.</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Donate Sheet -->
+    <div id="donateSheet" class="bottom-sheet fixed bottom-0 left-0 right-0 z-40 premium-glass rounded-t-[32px] border-t border-white/10 p-6 shadow-[0_-20px_50px_rgba(0,0,0,0.8)] max-w-md mx-auto">
+        <div class="w-12 h-1 bg-white/10 rounded-full mx-auto mb-5" onclick="triggerHaptic('tick'); document.getElementById('donateSheet').classList.remove('open')"></div>
+        <div class="flex justify-between items-center mb-5">
+            <h3 class="text-base font-semibold tracking-tight">Consider Donating</h3>
+            <button onclick="triggerHaptic('tick'); document.getElementById('donateSheet').classList.remove('open')" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-xs">✕</button>
+        </div>
+        <div class="space-y-4">
+            <div class="premium-glass rounded-2xl p-5 text-center border border-white/5">
+                <div class="text-3xl mb-2">💛</div>
+                <p class="text-sm text-zinc-300 font-medium leading-relaxed">Kash is free to use.<br>If it helps you manage your finances, consider supporting its development.</p>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="triggerHaptic('success'); navigator.clipboard.writeText('01301292335').then(() => showToast('📋 bKash number copied!'))" class="shine-effect flex flex-col items-center justify-center gap-2 py-4 rounded-xl btn-press" style="background: rgba(236,72,153,0.1); border: 1px solid rgba(236,72,153,0.25);">
+                    <span class="text-2xl">📱</span>
+                    <span class="text-xs text-pink-400 font-bold uppercase tracking-wider">bKash</span>
+                    <span class="text-[10px] text-pink-300/70 font-mono">01301292335</span>
+                </button>
+                <button onclick="triggerHaptic('success'); navigator.clipboard.writeText('01301292335').then(() => showToast('📋 Nagad number copied!'))" class="shine-effect flex flex-col items-center justify-center gap-2 py-4 rounded-xl btn-press" style="background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.25);">
+                    <span class="text-2xl">🍊</span>
+                    <span class="text-xs text-orange-400 font-bold uppercase tracking-wider">Nagad</span>
+                    <span class="text-[10px] text-orange-300/70 font-mono">01301292335</span>
+                </button>
+            </div>
+            <p class="text-[10px] text-zinc-600 text-center">Tap to copy number. Any amount is appreciated. 🙏</p>
+        </div>
+    </div>
+
+    <div id="syncModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/80 backdrop-blur-md">
+        <div class="premium-glass max-w-sm w-full rounded-3xl p-6 border border-white/10 text-center space-y-4">
+            <div class="w-14 h-14 bg-accentPurple/10 rounded-full flex items-center justify-center text-xl mx-auto text-accentPurple">☁️</div>
+            <div>
+                <h3 class="text-base font-bold tracking-tight text-white">Google Drive Backup</h3>
+                <p class="text-xs text-zinc-400 mt-1.5 leading-relaxed">Store and sync your asset logs directly within a private cloud container file inside your personal Google Drive.</p>
+            </div>
+            <div class="bg-white/5 p-3 rounded-xl text-left text-xs text-zinc-400 space-y-1.5">
+                <div class="flex justify-between"><span>Status:</span> <span id="driveStatusText" class="text-amber-400 font-medium">Disconnected</span></div>
+            </div>
+            <div class="flex gap-3 pt-1">
+                <button onclick="toggleDriveSync()" id="driveConnectBtn" class="flex-grow py-3 rounded-xl bg-accentPurple text-black font-bold text-xs btn-press">Connect Drive</button>
+                <button onclick="closeSyncModal()" class="px-5 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 font-semibold text-xs btn-press">Dismiss</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 🚨 PASTE YOUR KEYS HERE EXACTLY BETWEEN THE QUOTES 🚨
+        const GOOGLE_CLIENT_ID = '992426163431-obg7lfsfstleeffikoom0q1bs91qfgqi.apps.googleusercontent.com';
+        const GOOGLE_API_KEY = 'AIzaSyAJtY5uYz_GLmDI-oPD5W1ulrWvdydPmqI';
+        // ----------------------------------------------------
+
+        let tokenClient;
+        let accessToken = null;
+
+        // Load Google Identity Services Script dynamically
+        function loadGoogleAPI() {
+            const script = document.createElement('script');
+            script.src = 'https://accounts.google.com/gsi/client';
+            script.async = true; script.defer = true;
+            script.onload = () => {
+                tokenClient = google.accounts.oauth2.initTokenClient({
+                    client_id: GOOGLE_CLIENT_ID,
+                    scope: 'https://www.googleapis.com/auth/drive.file',
+                    callback: (tokenResponse) => {
+                        if (tokenResponse && tokenResponse.access_token) {
+                            accessToken = tokenResponse.access_token;
+                            handleSuccessfulCloudConnection();
+                        }
+                    }
+                });
+            };
+            document.body.appendChild(script);
+        }
+
+        // --- CLOUD SYNC ENGINE ---
+        async function handleSuccessfulCloudConnection() {
+            appState.isDriveConnected = true;
+            updateSyncUI();
+            showToast('🔄 Searching Drive...');
+
+            try {
+                let fileId = appState.driveFileId;
+                
+                // 1. Search Google Drive for our backup file
+                if (!fileId) {
+                    const searchRes = await fetch('https://www.googleapis.com/drive/v3/files?q=name="asset_desk_data.json" and trashed=false', {
+                        headers: { 'Authorization': `Bearer ${accessToken}` }
+                    }).then(r => r.json());
+                    
+                    if (searchRes.files && searchRes.files.length > 0) {
+                        fileId = searchRes.files[0].id;
+                        appState.driveFileId = fileId;
+                    }
+                }
+
+                // 2. Read existing file OR create new one
+                if (fileId) {
+                    showToast('📥 Downloading Cloud Data...');
+                    const fileData = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
+                        headers: { 'Authorization': `Bearer ${accessToken}` }
+                    }).then(r => r.json());
+                    
+                    appState.logs = fileData.logs || [];
+                    calculateMetrics(); renderActivityFeed();
+                    showToast('✅ Synced with Cloud');
+                } else {
+                    showToast('📝 Creating Backup File...');
+                    const metaRes = await fetch('https://www.googleapis.com/drive/v3/files', {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: 'asset_desk_data.json' })
+                    }).then(r => r.json());
+                    
+                    appState.driveFileId = metaRes.id;
+                    await pushUpdateToDrive();
+                    showToast('✅ Drive Setup Complete');
+                }
+                saveToLocalStorage();
+            } catch (e) { console.error(e); showToast('⚠️ Connection Error'); }
+        }
+
+        async function pushUpdateToDrive() {
+            if (!appState.isDriveConnected || !accessToken || !appState.driveFileId) return;
+            try {
+                await fetch(`https://www.googleapis.com/upload/drive/v3/files/${appState.driveFileId}?uploadType=media`, {
+                    method: 'PATCH',
+                    headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify(appState)
+                });
+            } catch (e) { console.error('Cloud upload failed', e); }
+        }
+
+        // --- APP STATE CONTROLS ---
+        let appState = {
+            currentWallet: 'bank', currentLogType: 'bd',
+            wallets: { bank: 0, cash: 0, bkash: 0, nagad: 0 },
+            logs: [], isDriveConnected: false, driveFileId: null
+        };
+
+        function saveToLocalStorage() { localStorage.setItem('aura_asset_desk_state_v5', JSON.stringify(appState)); }
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('aura_asset_desk_state_v5');
+            if (saved) { try { appState = JSON.parse(saved); } catch(e) { console.error(e); } }
+        }
+
+        function calculateMetrics() {
+            appState.wallets = { bank: 0, cash: 0, bkash: 0, nagad: 0 };
+            appState.logs.forEach(log => {
+                const amt = Number(log.amount);
+                if (log.type === 'bd') appState.wallets[log.wallet] = amt;
+                else if (log.type === 'income') appState.wallets[log.wallet] += amt;
+                else if (log.type === 'expense') appState.wallets[log.wallet] -= amt;
+            });
+            renderAllWallets(); updatePrimaryAuraOrb(); renderMonthlySpent();
+        }
+
+        function renderMonthlySpent() {
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            let total = 0;
+            appState.logs.forEach(log => {
+                if (log.type === 'expense') {
+                    if (log.timestamp) {
+                        const logDate = new Date(log.timestamp);
+                        if (logDate.getMonth() === currentMonth && logDate.getFullYear() === currentYear) {
+                            total += Number(log.amount);
+                        }
+                    } else {
+                        // Legacy entries without timestamp: count them all
+                        total += Number(log.amount);
+                    }
+                }
+            });
+            document.getElementById('monthlySpentTotal').textContent = formatBDT(total);
+            document.getElementById('monthlySpentLabel').textContent = now.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        }
+
+        function formatBDT(amount) { return '৳ ' + Number(amount).toLocaleString('en-US'); }
+
+        function renderAllWallets() {
+            let grandTotal = 0;
+            Object.keys(appState.wallets).forEach(wallet => {
+                const val = appState.wallets[wallet]; grandTotal += val;
+                document.getElementById(`bal-${wallet}`).textContent = formatBDT(val);
+            });
+            document.getElementById('combinedAssetsTotal').textContent = `Total Asset: ${formatBDT(grandTotal)}`;
+            appState.grandTotal = grandTotal;
+        }
+
+        function selectActiveWallet(walletId) {
+            triggerHaptic('tick');
+            document.querySelectorAll('.wallet-card').forEach(card => card.classList.remove('border-white/30', 'scale-[1.01]', 'wallet-glow-bank', 'wallet-glow-cash', 'wallet-glow-bkash', 'wallet-glow-nagad'));
+            const activeCard = document.getElementById(`walletCard-${walletId}`);
+            activeCard.classList.add('border-white/30', 'scale-[1.01]', `wallet-glow-${walletId}`);
+            appState.currentWallet = walletId; updatePrimaryAuraOrb();
+        }
+
+        function updatePrimaryAuraOrb() {
+            const walletId = appState.currentWallet; const balance = appState.wallets[walletId];
+            const logoMap = { bank: '🏦', cash: '💵', bkash: '📱', nagad: '🍊' };
+            const auraColors = {
+                bank: { border: 'rgba(52, 199, 89, 0.25)', orb: 'rgba(52, 199, 89, 0.12)', progress: '#34c759' },
+                cash: { border: 'rgba(245, 158, 11, 0.25)', orb: 'rgba(245, 158, 11, 0.12)', progress: '#f59e0b' },
+                bkash: { border: 'rgba(236, 72, 153, 0.25)', orb: 'rgba(236, 72, 153, 0.12)', progress: '#ec4899' },
+                nagad: { border: 'rgba(249, 115, 22, 0.25)', orb: 'rgba(249, 115, 22, 0.12)', progress: '#f97316' }
+            };
+
+            const pct = appState.grandTotal > 0 ? Math.round((balance / appState.grandTotal) * 100) : 0;
+            const orb = document.getElementById('primaryAuraOrb'); const colorMeta = auraColors[walletId];
+            
+            orb.style.background = `radial-gradient(circle, ${colorMeta.orb} 0%, rgba(14, 15, 23, 0.85) 80%)`;
+            orb.style.boxShadow = `inset 0 0 25px ${colorMeta.orb}, 0 10px 40px rgba(0, 0, 0, 0.5)`;
+            orb.style.borderColor = colorMeta.border;
+
+            document.getElementById('activeOrbLogo').textContent = logoMap[walletId];
+            document.getElementById('activeOrbWalletName').textContent = walletId;
+            document.getElementById('activeOrbBalance').textContent = formatBDT(balance);
+            document.getElementById('activeOrbPercentage').textContent = `${pct}% of total`;
+
+            const arc = document.getElementById('orbProgressArc'); arc.setAttribute('stroke', colorMeta.progress);
+            const radius = 82; const circumference = 2 * Math.PI * radius;
+            const boundedPct = Math.max(0, Math.min(100, pct));
+            const offset = circumference - (boundedPct / 100) * circumference;
+            arc.style.strokeDasharray = `${circumference}`; arc.style.strokeDashoffset = `${offset}`;
+        }
+
+        function setLogType(type) {
+            triggerHaptic('tick'); appState.currentLogType = type;
+            const btnBd = document.getElementById('type-bd'); const btnInc = document.getElementById('type-income'); const btnExp = document.getElementById('type-expense');
+            [btnBd, btnInc, btnExp].forEach(b => b.classList.remove('bg-accentPurple', 'text-black', 'bg-accentGreen', 'bg-amber-400'));
+            
+            const activeBtn = document.getElementById(`type-${type}`); activeBtn.classList.remove('text-zinc-400');
+            if (type === 'bd') activeBtn.classList.add('bg-accentPurple', 'text-black');
+            else if (type === 'income') activeBtn.classList.add('bg-accentGreen', 'text-black');
+            else if (type === 'expense') activeBtn.classList.add('bg-amber-400', 'text-black');
+
+            // Hide transaction label for Balance B/D
+            const noteWrapper = document.getElementById('logNoteWrapper');
+            const noteInput = document.getElementById('logNote');
+            if (type === 'bd') {
+                noteWrapper.style.display = 'none';
+                noteInput.removeAttribute('required');
+            } else {
+                noteWrapper.style.display = '';
+                noteInput.setAttribute('required', 'required');
+            }
+        }
+
+        function applyQuickAmount(val) { triggerHaptic('tick'); document.getElementById('logAmount').value = val; }
+
+        function saveEntry(e) {
+            e.preventDefault(); triggerHaptic('success');
+            const amountInput = document.getElementById('logAmount'); const walletInput = document.getElementById('logWallet'); const noteInput = document.getElementById('logNote');
+
+            const newLog = {
+                id: Date.now(), type: appState.currentLogType, amount: Math.abs(Number(amountInput.value)),
+                wallet: walletInput.value, note: noteInput.value.trim() || 'Log Entry', date: getFormattedDate(), timestamp: new Date().toISOString()
+            };
+
+            appState.logs.unshift(newLog); calculateMetrics(); renderActivityFeed(); saveToLocalStorage();
+            pushUpdateToDrive(); // Silent cloud backup trigger
+            amountInput.value = ''; noteInput.value = '';
+            document.getElementById('logSheet').classList.remove('open');
+            showToast('📊 Entry Committed');
+        }
+
+        function deleteLog(logId) {
+            triggerHaptic('tick'); appState.logs = appState.logs.filter(log => log.id !== logId);
+            calculateMetrics(); renderActivityFeed(); saveToLocalStorage();
+            pushUpdateToDrive(); // Silent cloud backup trigger
+            showToast('🗑️ Entry removed');
+        }
+
+        function renderActivityFeed() {
+            const container = document.getElementById('activityFeedContainer'); container.innerHTML = '';
+            if (appState.logs.length === 0) {
+                container.innerHTML = `<div class="text-center py-6 premium-glass rounded-2xl border border-dashed border-white/5"><p class="text-xs text-zinc-500">No logs on this desk.</p></div>`;
+                return;
+            }
+
+            appState.logs.forEach(log => {
+                const el = document.createElement('div');
+                el.className = 'premium-glass rounded-2xl p-3.5 flex justify-between items-center transition-all duration-300 transform scale-100';
+                let icon = '🪙'; let amountColor = 'text-white'; let prefix = '';
+                if (log.type === 'bd') { icon = '📥'; amountColor = 'text-accentPurple'; }
+                else if (log.type === 'income') { icon = '💸'; amountColor = 'text-emerald-400'; prefix = '+'; }
+                else if (log.type === 'expense') { icon = '☕'; amountColor = 'text-zinc-300'; prefix = '-'; }
+
+                el.innerHTML = `
+                    <div class="flex items-center gap-3.5 min-w-0">
+                        <div class="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-center text-base shrink-0 select-none">${icon}</div>
+                        <div class="min-w-0 flex flex-col justify-center">
+                            <p class="text-sm font-medium tracking-tight text-white truncate leading-tight">${log.note}</p>
+                            <p class="text-[9px] uppercase tracking-wider text-zinc-500 font-bold mt-1 leading-none">${log.wallet} • ${log.date}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 shrink-0 ml-2">
+                        <span class="text-base font-bold tracking-tight ${amountColor}">${prefix}${formatBDT(log.amount)}</span>
+                        <button onclick="deleteLog(${log.id})" class="w-5 h-5 rounded-full bg-white/5 flex items-center justify-center text-[10px] text-zinc-500 hover:bg-red-500/10 hover:text-red-400 transition-colors">✕</button>
+                    </div>
+                `;
+                container.appendChild(el);
+            });
+        }
+
+        function showSyncOptions() { triggerHaptic('tick'); showToast('🚀 Under Development'); }
+        function closeSyncModal() { triggerHaptic('tick'); document.getElementById('syncModal').classList.add('hidden'); }
+
+        function toggleDriveSync() {
+            triggerHaptic('success');
+            if (!appState.isDriveConnected) {
+                tokenClient.requestAccessToken(); // Triggers Google Login Popup
+            } else {
+                appState.isDriveConnected = false; accessToken = null;
+                updateSyncUI(); saveToLocalStorage();
+                showToast('🔒 Offline Mode');
+            }
+        }
+
+        function updateSyncUI() {
+            const btn = document.getElementById('driveConnectBtn'); const statusText = document.getElementById('driveStatusText'); const indicator = document.getElementById('syncCloudIndicator');
+            if (appState.isDriveConnected) {
+                btn.textContent = 'Disconnect'; btn.className = "flex-grow py-3 rounded-xl bg-red-500 text-white font-bold text-xs btn-press";
+                statusText.textContent = 'Active (2TB Backup)'; statusText.className = 'text-emerald-400 font-medium';
+                indicator.textContent = '🟢';
+            } else {
+                btn.textContent = 'Connect Drive'; btn.className = "flex-grow py-3 rounded-xl bg-accentPurple text-black font-bold text-xs btn-press";
+                statusText.textContent = 'Disconnected'; statusText.className = 'text-amber-400 font-medium';
+                indicator.textContent = '☁️';
+            }
+        }
+
+        function clearAllDataPrompt() {
+            if (confirm("Reset ledger data? (This will also clear your Drive backup if connected)")) {
+                appState.logs = []; calculateMetrics(); renderActivityFeed(); saveToLocalStorage(); pushUpdateToDrive(); showToast('✨ Reset complete');
+            }
+        }
+
+        function getFormattedDate() { return new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short' }); }
+        
+        function showToast(msg) {
+            const toast = document.getElementById('toast'); document.getElementById('toastMessage').textContent = msg;
+            toast.style.opacity = '1'; toast.style.transform = 'translate(-50%, 0) scale(1)';
+            setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translate(-50%, 0) scale(0.95)'; }, 2000);
+        }
+
+        // --- TACTILE AUDIO ---
+        let audioContext = null;
+        function initAudio() { if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)(); }
+        function triggerHaptic(type) {
+            initAudio(); if (!audioContext) return;
+            const osc = audioContext.createOscillator(); const gain = audioContext.createGain();
+            osc.connect(gain); gain.connect(audioContext.destination);
+            const now = audioContext.currentTime;
+            if (type === 'tick') { osc.frequency.setValueAtTime(1000, now); osc.frequency.exponentialRampToValueAtTime(100, now + 0.04); gain.gain.setValueAtTime(0.05, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04); osc.start(now); osc.stop(now + 0.05); }
+            else if (type === 'success') { osc.type = 'sine'; osc.frequency.setValueAtTime(523.25, now); osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.18); gain.gain.setValueAtTime(0.06, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25); osc.start(now); osc.stop(now + 0.26); }
+        }
+
+        // --- INIT ---
+        window.onload = function() {
+            document.getElementById('liveDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'short' });
+            loadGoogleAPI(); loadFromLocalStorage(); calculateMetrics(); renderActivityFeed(); selectActiveWallet('bank'); updateSyncUI();
+            setLogType('bd'); // default — hides transaction label for B/D
+        }
+    </script>
+</body>
+</html>
