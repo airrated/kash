@@ -27,13 +27,16 @@
     </script>
     
    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+
         body {
-            /* Sleek dark background with glowing ambient mesh accents exactly like the reference */
-            background-color: #030712;
+            background-color: #0e0b1e;
             background-image: 
-                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(147, 51, 234, 0.13) 0px, transparent 50%),
-                radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.08) 0px, transparent 50%);
+                radial-gradient(ellipse 90% 65% at 50% -5%, rgba(100, 40, 255, 0.6) 0%, transparent 65%),
+                radial-gradient(ellipse 60% 40% at 85% 85%, rgba(90, 30, 200, 0.22) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 30% at 10% 90%, rgba(60, 20, 160, 0.18) 0%, transparent 60%);
             background-attachment: fixed;
             -webkit-user-select: none;
             user-select: none;
@@ -42,169 +45,392 @@
             height: 100vh;
         }
 
-        /* Re-engineered true glassmorphism containers matching your screenshot */
+        /* Visible glassmorphism — stronger borders + brighter bg tint */
         .premium-glass {
-            background: rgba(13, 17, 28, 0.45);
-            backdrop-filter: blur(24px) saturate(160%);
-            -webkit-backdrop-filter: blur(24px) saturate(160%);
-            /* Thick, satin-like semi-transparent border */
-            border: 1.5px solid rgba(255, 255, 255, 0.09);
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(24px) saturate(150%);
+            -webkit-backdrop-filter: blur(24px) saturate(150%);
+            border: 1px solid rgba(255, 255, 255, 0.18);
             box-shadow: 
-                0 4px 30px rgba(0, 0, 0, 0.4),
-                inset 0 1px 1px rgba(255, 255, 255, 0.1);
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.04);
         }
 
-        /* Subtle grid pattern layout overlay */
+        /* Dot grid */
         .grid-pattern {
-            background-image: radial-gradient(rgba(255, 255, 255, 0.015) 1.2px, transparent 1.2px);
-            background-size: 32px 32px;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+            background-size: 26px 26px;
         }
 
-        /* Clean up ambient orbs to let the mesh background take over */
+        /* Top purple bloom orb */
         .ambient-orb {
             position: fixed;
-            top: 20%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 500px; height: 500px;
-            background: radial-gradient(circle, rgba(147, 51, 234, 0.08) 0%, rgba(3, 7, 18, 0) 70%);
-            filter: blur(60px);
-            z-index: -1; pointer-events: none;
+            top: -100px; left: 50%;
+            transform: translateX(-50%);
+            width: 480px; height: 480px;
+            background: radial-gradient(circle, rgba(130, 60, 255, 0.5) 0%, rgba(90, 20, 210, 0.22) 45%, transparent 72%);
+            filter: blur(45px);
+            z-index: 0; pointer-events: none;
         }
 
+        .ambient-orb-2 {
+            position: fixed;
+            bottom: -120px; left: 50%;
+            transform: translateX(-50%);
+            width: 320px; height: 320px;
+            background: radial-gradient(circle, rgba(70, 30, 160, 0.28) 0%, transparent 70%);
+            filter: blur(55px);
+            z-index: 0; pointer-events: none;
+        }
+
+        /* Greeting */
+        .greeting-sub { color: rgba(255,255,255,0.5); font-size: 12.5px; font-weight: 500; letter-spacing: 0.01em; }
+        .greeting-main { font-size: 27px; font-weight: 800; line-height: 1.18; letter-spacing: -0.03em; color: #fff; }
+
+        /* Search bar — functional, pill-shaped */
+        .search-bar {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            padding: 0 14px 0 16px;
+            gap: 10px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 4px 20px rgba(0,0,0,0.2);
+        }
+        .search-bar input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: rgba(255,255,255,0.85);
+            font-size: 13.5px;
+            font-weight: 400;
+            flex: 1;
+        }
+        .search-bar input::placeholder { color: rgba(255,255,255,0.32); }
+        .search-icon { color: rgba(255,255,255,0.35); font-size: 14px; flex-shrink: 0; }
+
+        /* Filter chips */
+        .action-chips { display: flex; gap: 7px; overflow-x: auto; padding-bottom: 2px; }
+        .action-chips::-webkit-scrollbar { display: none; }
+        .action-chip {
+            display: flex; align-items: center; gap: 5px;
+            padding: 7px 13px;
+            border-radius: 50px;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.17);
+            font-size: 12px; font-weight: 600;
+            color: rgba(255,255,255,0.72);
+            white-space: nowrap; flex-shrink: 0;
+            cursor: pointer;
+            transition: all 0.15s;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+        }
+        .action-chip:active { background: rgba(255,255,255,0.14); transform: scale(0.97); }
+        .action-chip.chip-active {
+            background: rgba(255,255,255,0.14);
+            border-color: rgba(255,255,255,0.35);
+            color: #fff;
+        }
+
+        /* Section labels */
+        .section-label { font-size: 15px; font-weight: 700; color: rgba(255,255,255,0.9); letter-spacing: -0.01em; }
+
+        /* Wallet / activity cards — visible glass */
+        .activity-card {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.16);
+            border-radius: 22px;
+            padding: 18px 16px;
+            display: flex; flex-direction: column;
+            gap: 4px; min-height: 120px;
+            position: relative; overflow: hidden;
+            cursor: pointer; transition: all 0.18s;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.12);
+        }
+        .activity-card:active { transform: scale(0.97); }
+        .activity-card-label { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.85); }
+        .activity-card-sub { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.35); }
+        .activity-card-value { font-size: 30px; font-weight: 800; color: #fff; letter-spacing: -0.04em; margin-top: auto; line-height: 1; }
+
+        /* Corner glow blobs on cards */
+        .activity-card-glow {
+            position: absolute; bottom: -24px; right: -24px;
+            width: 110px; height: 110px;
+            border-radius: 50%;
+            filter: blur(28px);
+            pointer-events: none;
+        }
+        .card-glow-bank  { background: rgba(52, 199, 89, 0.3); }
+        .card-glow-cash  { background: rgba(245, 158, 11, 0.3); }
+        .card-glow-bkash { background: rgba(236, 72, 153, 0.3); }
+        .card-glow-nagad { background: rgba(249, 115, 22, 0.3); }
+
+        /* Wallet selection glow rings */
+        .wallet-glow-bank  { border-color: rgba(52,199,89,0.55) !important;  box-shadow: 0 0 24px rgba(52,199,89,0.15),  inset 0 1px 0 rgba(255,255,255,0.12) !important; }
+        .wallet-glow-cash  { border-color: rgba(245,158,11,0.55) !important;  box-shadow: 0 0 24px rgba(245,158,11,0.15), inset 0 1px 0 rgba(255,255,255,0.12) !important; }
+        .wallet-glow-bkash { border-color: rgba(236,72,153,0.55) !important;  box-shadow: 0 0 24px rgba(236,72,153,0.15), inset 0 1px 0 rgba(255,255,255,0.12) !important; }
+        .wallet-glow-nagad { border-color: rgba(249,115,22,0.55) !important;  box-shadow: 0 0 24px rgba(249,115,22,0.15),  inset 0 1px 0 rgba(255,255,255,0.12) !important; }
+
+        .wallet-glow-bank .card-value  { color: #4ade80 !important; }
+        .wallet-glow-cash .card-value  { color: #fbbf24 !important; }
+        .wallet-glow-bkash .card-value { color: #f472b6 !important; }
+        .wallet-glow-nagad .card-value { color: #fb923c !important; }
+
+        /* Floating + FAB */
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 30;
+            width: 58px; height: 58px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.95);
+            border: 1px solid rgba(255,255,255,0.6);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 26px; font-weight: 300; color: #1a0835;
+            box-shadow: 0 0 30px rgba(160,100,255,0.5), 0 8px 24px rgba(0,0,0,0.4);
+            cursor: pointer;
+            transition: transform 0.15s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.15s;
+            line-height: 1;
+        }
+        .fab:active { transform: translateX(-50%) scale(0.93); box-shadow: 0 0 20px rgba(160,100,255,0.35), 0 4px 14px rgba(0,0,0,0.35); }
+
+        /* Shine on press */
         .shine-effect { position: relative; overflow: hidden; }
         .shine-effect::after {
             content: ''; position: absolute;
             top: -50%; left: -60%; width: 30%; height: 200%;
-            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.08), transparent);
             transform: rotate(30deg); transition: 0.8s; opacity: 0;
         }
         .shine-effect:active::after { left: 130%; opacity: 1; transition: 0s; }
 
+        /* Bottom sheets */
         .bottom-sheet {
             transform: translateY(105%);
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            background: rgba(10, 12, 22, 0.75) !important;
-            backdrop-filter: blur(30px) saturate(180%) !important;
-            -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
-            border-top: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+            background: rgba(12, 8, 26, 0.94) !important;
+            backdrop-filter: blur(32px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(32px) saturate(180%) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.16) !important;
         }
         .bottom-sheet.open { transform: translateY(0); }
 
-        .btn-press { transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1); will-change: transform; }
+        .btn-press { transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1); will-change: transform; cursor: pointer; }
         .btn-press:active { transform: scale(0.97); }
 
-        /* Smooth glow effects that sync perfectly with card borders */
-        .wallet-glow-bank { border-color: rgba(52, 199, 89, 0.45) !important; box-shadow: 0 0 15px rgba(52, 199, 89, 0.15); }
-        .wallet-glow-cash { border-color: rgba(245, 158, 11, 0.45) !important; box-shadow: 0 0 15px rgba(245, 158, 11, 0.15); }
-        .wallet-glow-bkash { border-color: rgba(236, 72, 153, 0.45) !important; box-shadow: 0 0 15px rgba(236, 72, 153, 0.15); }
-        .wallet-glow-nagad { border-color: rgba(249, 115, 22, 0.45) !important; box-shadow: 0 0 15px rgba(249, 115, 22, 0.15); }
-
-        .wallet-glow-bank * { color: #34c759 !important; }
-        .wallet-glow-cash * { color: #f59e0b !important; }
-        .wallet-glow-bkash * { color: #ec4899 !important; }
-        .wallet-glow-nagad * { color: #f97316 !important; }
+        /* Header */
+        .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px 10px; }
+        .top-bar-title { font-size: 15px; font-weight: 700; color: rgba(255,255,255,0.9); letter-spacing: -0.01em; }
+        .top-bar-badge { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.45); background: rgba(255,255,255,0.09); padding: 2px 8px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.15); }
+        .top-icon-btn {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; cursor: pointer;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.16);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+        }
 
         .custom-scroll::-webkit-scrollbar { width: 0px; }
+        
+        /* Search highlight pulse on focus */
+        .search-bar:focus-within {
+            border-color: rgba(160, 100, 255, 0.5);
+            box-shadow: 0 0 0 3px rgba(120,60,255,0.12), inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+
+        @keyframes streakPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(124,58,237,0.4); }
+            50% { box-shadow: 0 0 0 5px rgba(124,58,237,0); }
+        }
     </style>
 </head>
 <body class="text-white grid-pattern relative flex flex-col justify-between select-none">
 
     <div class="ambient-orb"></div>
+    <div class="ambient-orb-2"></div>
 
     <div id="toast" class="fixed top-14 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 scale-95 transition-all duration-300 premium-glass px-5 py-2.5 rounded-full text-xs font-medium flex items-center gap-2 border border-white/10 shadow-xl">
         <span id="toastIcon">✨</span>
         <span id="toastMessage">Logged</span>
     </div>
 
-    <div class="relative z-10 w-full max-w-md mx-auto px-3 pt-5 flex flex-col h-screen overflow-hidden">
+    <div class="relative z-10 w-full max-w-md mx-auto flex flex-col h-screen overflow-hidden">
         
-        <header class="flex justify-between items-center py-5 px-6 shrink-0">
-            <button onclick="triggerHaptic('tick'); document.getElementById('aboutSheet').classList.add('open')" class="flex flex-col items-start gap-0.5 btn-press text-left group">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 shrink-0">
-                        <svg viewBox="0 0 787.3 787.3" xmlns="http://www.w3.org/2000/svg" class="w-full h-full"><path fill="white" d="m694.65,0H92.66C41.48,0,0,41.48,0,92.66v601.99c0,51.17,41.48,92.66,92.66,92.66h601.99c51.17,0,92.66-41.48,92.66-92.66V92.66c0-51.17-41.48-92.66-92.66-92.66Zm-360.6,634.25h-153.45V155.41h153.45v478.84Zm53.9,0v-180c10.19-1.76,20.66-2.69,31.35-2.69,100.89,0,182.69,81.79,182.69,182.69h-214.04Zm214.04-350.57l-214.04,138.5v-138.5l214.04-128.27v128.27Z"/></svg>
-                    </div>
-                    <h1 class="text-2xl font-semibold tracking-tight text-white">Kash</h1>
+        <!-- Top bar — Aura style -->
+        <header class="top-bar shrink-0">
+            <button onclick="triggerHaptic('tick'); document.getElementById('aboutSheet').classList.add('open')" class="flex items-center gap-2 btn-press">
+                <div class="w-7 h-7 shrink-0">
+                    <svg viewBox="0 0 787.3 787.3" xmlns="http://www.w3.org/2000/svg" class="w-full h-full"><path fill="white" d="m694.65,0H92.66C41.48,0,0,41.48,0,92.66v601.99c0,51.17,41.48,92.66,92.66,92.66h601.99c51.17,0,92.66-41.48,92.66-92.66V92.66c0-51.17-41.48-92.66-92.66-92.66Zm-360.6,634.25h-153.45V155.41h153.45v478.84Zm53.9,0v-180c10.19-1.76,20.66-2.69,31.35-2.69,100.89,0,182.69,81.79,182.69,182.69h-214.04Zm214.04-350.57l-214.04,138.5v-138.5l214.04-128.27v128.27Z"/></svg>
                 </div>
-                <p class="text-[11px] tracking-wider uppercase text-zinc-500 font-bold mt-0.5" id="liveDate">Wednesday, 22 Aug</p>
+                <span class="top-bar-title">Kash</span>
+                <span class="top-bar-badge">1.2 BETA</span>
             </button>
-            <div class="flex gap-3">
-                <button onclick="showSyncOptions()" class="w-11 h-11 rounded-full premium-glass flex items-center justify-center btn-press">
-                    <span id="syncCloudIndicator" class="text-base">☁️</span>
-                </button>
-                <button onclick="triggerHaptic('tick'); document.getElementById('donateSheet').classList.add('open')" class="w-11 h-11 rounded-full premium-glass flex items-center justify-center btn-press">
-                    <span class="text-base">💵</span>
-                </button>
-                <button onclick="triggerHaptic('success'); document.getElementById('logSheet').classList.add('open'); setLogType(appState.currentLogType || 'bd')" class="w-11 h-11 rounded-full bg-white text-black flex items-center justify-center font-bold text-lg btn-press shadow-xl">
-                    ＋
-                </button>
+            <div class="flex items-center gap-2">
+                <button onclick="triggerHaptic('tick'); openProfileSheet()" class="top-icon-btn btn-press" id="profileBtn">👤</button>
+                <button onclick="triggerHaptic('tick'); document.getElementById('donateSheet').classList.add('open')" class="top-icon-btn btn-press">💛</button>
             </div>
         </header>
 
-        <main class="flex-grow overflow-y-auto custom-scroll px-6 space-y-6 pb-24">
-            <section class="flex flex-col items-center justify-center py-4 relative">
-                <div id="primaryAuraOrb" class="relative w-44 h-44 rounded-full flex flex-col items-center justify-center transition-all duration-500" 
-                     style="background: radial-gradient(circle, rgba(157, 141, 242, 0.12) 0%, rgba(14, 15, 23, 0.8) 80%); box-shadow: inset 0 0 25px rgba(157, 141, 242, 0.15); border: 1px solid rgba(157, 141, 242, 0.15);">
-                    <svg class="absolute inset-0 w-full h-full -rotate-90">
-                        <circle cx="88" cy="88" r="82" stroke="rgba(255, 255, 255, 0.015)" stroke-width="2.5" fill="transparent" />
-                        <circle id="orbProgressArc" cx="88" cy="88" r="82" stroke="#9D8DF2" stroke-width="2.5" fill="transparent" stroke-dasharray="515" stroke-dashoffset="515" stroke-linecap="round" class="transition-all duration-500 ease-out" />
-                    </svg>
-                    <div class="text-center z-10 px-4">
-                        <span id="activeOrbLogo" class="text-xl block mb-0.5">🏦</span>
-                        <span id="activeOrbWalletName" class="text-[10px] uppercase tracking-widest text-zinc-400 font-bold">BANK</span>
-                        <div class="text-xl font-bold tracking-tight text-white mt-0.5" id="activeOrbBalance">৳ 0</div>
-                        <span id="activeOrbPercentage" class="text-[9px] mt-1 inline-block bg-white/5 px-2 py-0.5 rounded-full text-zinc-400 font-medium">0% of total</span>
+        <main class="flex-grow overflow-y-auto custom-scroll px-4 space-y-5 pb-28">
+
+            <!-- Greeting — "Good morning! / You're on a wave of productivity!" -->
+            <section class="px-2 pt-2 pb-1">
+                <p class="greeting-sub" id="liveDate">Tuesday, 16 Jun</p>
+                <h1 class="greeting-main mt-1" id="greetingHeadline">You're in control<br>of your money!</h1>
+            </section>
+
+            <!-- Search bar — search by amount or date -->
+            <section class="px-1">
+                <div class="search-bar">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="searchInput" placeholder="Search by amount or date…" oninput="filterFeed(this.value)" />
+                </div>
+            </section>
+
+            <!-- Daily Streak — week view -->
+            <section class="px-1">
+                <div class="activity-card" style="min-height:auto; padding: 16px 18px 18px; gap:0;">
+                    <div class="flex justify-between items-center mb-3">
+                        <span style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.9);letter-spacing:-0.01em">Daily Streaks</span>
+                    </div>
+                    <!-- Day labels -->
+                    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:6px;">
+                        <div style="text-align:center;font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);letter-spacing:0.04em">M</div>
+                        <div style="text-align:center;font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);letter-spacing:0.04em">T</div>
+                        <div style="text-align:center;font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);letter-spacing:0.04em">W</div>
+                        <div style="text-align:center;font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);letter-spacing:0.04em">T</div>
+                        <div style="text-align:center;font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);letter-spacing:0.04em">F</div>
+                        <div style="text-align:center;font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);letter-spacing:0.04em">S</div>
+                        <div style="text-align:center;font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);letter-spacing:0.04em">S</div>
+                    </div>
+                    <!-- Streak badges -->
+                    <div id="streakBadges" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;"></div>
+                    <!-- Streak count -->
+                    <div id="streakCount" style="margin-top:12px;font-size:10px;font-weight:600;color:rgba(255,255,255,0.3);letter-spacing:0.04em;text-align:center;text-transform:uppercase"></div>
+                </div>
+            </section>
+
+            <!-- Your wallets — 2x2 grid of activity-style cards -->
+            <section class="px-1">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="section-label">Your wallets</span>
+                    <span class="text-[11px] font-semibold" style="color: rgba(255,255,255,0.3)" id="combinedAssetsTotal">Total: ৳ 0</span>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div onclick="selectActiveWallet('bank')" id="walletCard-bank" class="wallet-card activity-card">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <div class="activity-card-label">Bank</div>
+                                <div class="activity-card-sub">Balance</div>
+                            </div>
+                            <span style="font-size:18px">🏦</span>
+                        </div>
+                        <div class="mt-auto pt-3">
+                            <span class="activity-card-value card-value" id="bal-bank">৳ 0</span>
+                        </div>
+                        <div class="activity-card-glow card-glow-bank"></div>
+                    </div>
+                    <div onclick="selectActiveWallet('cash')" id="walletCard-cash" class="wallet-card activity-card">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <div class="activity-card-label">Cash</div>
+                                <div class="activity-card-sub">On hand</div>
+                            </div>
+                            <span style="font-size:18px">💵</span>
+                        </div>
+                        <div class="mt-auto pt-3">
+                            <span class="activity-card-value card-value" id="bal-cash">৳ 0</span>
+                        </div>
+                        <div class="activity-card-glow card-glow-cash"></div>
+                    </div>
+                    <div onclick="selectActiveWallet('bkash')" id="walletCard-bkash" class="wallet-card activity-card">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <div class="activity-card-label">bKash</div>
+                                <div class="activity-card-sub">Mobile</div>
+                            </div>
+                            <span style="font-size:18px">📱</span>
+                        </div>
+                        <div class="mt-auto pt-3">
+                            <span class="activity-card-value card-value" id="bal-bkash">৳ 0</span>
+                        </div>
+                        <div class="activity-card-glow card-glow-bkash"></div>
+                    </div>
+                    <div onclick="selectActiveWallet('nagad')" id="walletCard-nagad" class="wallet-card activity-card">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <div class="activity-card-label">Nagad</div>
+                                <div class="activity-card-sub">Mobile</div>
+                            </div>
+                            <span style="font-size:18px">🍊</span>
+                        </div>
+                        <div class="mt-auto pt-3">
+                            <span class="activity-card-value card-value" id="bal-nagad">৳ 0</span>
+                        </div>
+                        <div class="activity-card-glow card-glow-nagad"></div>
                     </div>
                 </div>
             </section>
 
-            <section class="px-0.5">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-[11px] uppercase tracking-widest text-zinc-500 font-bold">Wallets</h2>
-                    <span class="text-[10px] bg-white/5 text-zinc-400 px-2.5 py-0.5 rounded-full font-medium" id="combinedAssetsTotal">Total Asset: ৳ 0</span>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div onclick="selectActiveWallet('bank')" id="walletCard-bank" class="wallet-card premium-glass rounded-2xl p-4 flex flex-col justify-between h-28 relative overflow-hidden btn-press cursor-pointer">
-                        <div class="flex justify-between items-center w-full"><span class="text-sm font-semibold text-zinc-300 tracking-wide">Bank</span><span class="text-emerald-400 text-sm">🏦</span></div>
-                        <div class="mt-auto"><span class="text-[9px] text-zinc-500 block uppercase font-bold tracking-wider">Balance</span><span class="text-[19px] font-bold tracking-tight text-white mt-0.5 block" id="bal-bank">৳ 0</span></div>
+            <!-- Monthly spend card -->
+            <section class="px-1">
+                <div class="activity-card" style="flex-direction:row; align-items:center; gap:16px; min-height:auto; padding: 16px 18px;">
+                    <div style="width:40px;height:40px;border-radius:14px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📆</div>
+                    <div class="flex-grow">
+                        <div class="activity-card-sub" style="font-size:10px;text-transform:uppercase;letter-spacing:0.07em">This Month's Spending</div>
+                        <div style="font-size:22px;font-weight:800;color:#f59e0b;letter-spacing:-0.03em;line-height:1.2" id="monthlySpentTotal">৳ 0</div>
                     </div>
-                    <div onclick="selectActiveWallet('cash')" id="walletCard-cash" class="wallet-card premium-glass rounded-2xl p-4 flex flex-col justify-between h-28 relative overflow-hidden btn-press cursor-pointer">
-                        <div class="flex justify-between items-center w-full"><span class="text-sm font-semibold text-zinc-300 tracking-wide">Cash</span><span class="text-amber-400 text-sm">💵</span></div>
-                        <div class="mt-auto"><span class="text-[9px] text-zinc-500 block uppercase font-bold tracking-wider">Balance</span><span class="text-[19px] font-bold tracking-tight text-white mt-0.5 block" id="bal-cash">৳ 0</span></div>
-                    </div>
-                    <div onclick="selectActiveWallet('bkash')" id="walletCard-bkash" class="wallet-card premium-glass rounded-2xl p-4 flex flex-col justify-between h-28 relative overflow-hidden btn-press cursor-pointer">
-                        <div class="flex justify-between items-center w-full"><span class="text-sm font-semibold text-zinc-300 tracking-wide">bKash</span><span class="text-pink-500 text-sm">📱</span></div>
-                        <div class="mt-auto"><span class="text-[9px] text-zinc-500 block uppercase font-bold tracking-wider">Balance</span><span class="text-[19px] font-bold tracking-tight text-white mt-0.5 block" id="bal-bkash">৳ 0</span></div>
-                    </div>
-                    <div onclick="selectActiveWallet('nagad')" id="walletCard-nagad" class="wallet-card premium-glass rounded-2xl p-4 flex flex-col justify-between h-28 relative overflow-hidden btn-press cursor-pointer">
-                        <div class="flex justify-between items-center w-full"><span class="text-sm font-semibold text-zinc-300 tracking-wide">Nagad</span><span class="text-orange-400 text-sm">🍊</span></div>
-                        <div class="mt-auto"><span class="text-[9px] text-zinc-500 block uppercase font-bold tracking-wider">Balance</span><span class="text-[19px] font-bold tracking-tight text-white mt-0.5 block" id="bal-nagad">৳ 0</span></div>
-                    </div>
+                    <span class="text-[10px] font-bold" style="color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:0.06em" id="monthlySpentLabel"></span>
                 </div>
             </section>
 
-            <section class="px-0.5">
-                <div class="premium-glass rounded-2xl p-4 flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-base" style="background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.15);">📆</div>
-                        <div>
-                            <p class="text-[9px] uppercase tracking-widest text-zinc-500 font-bold">Total Spent This Month</p>
-                            <p class="text-lg font-bold tracking-tight text-amber-400 mt-0.5" id="monthlySpentTotal">৳ 0</p>
+            <!-- Weekly Expense Analysis — dot chart -->
+            <section class="px-1">
+                <div class="activity-card" style="min-height:auto; padding: 16px 18px 18px; gap:0;">
+                    <div class="flex justify-between items-center mb-4">
+                        <span style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.9);letter-spacing:-0.01em">Weekly Expenses</span>
+                    </div>
+                    <!-- Y-axis + dot chart canvas -->
+                    <div style="display:flex;gap:8px;align-items:flex-end;">
+                        <!-- Y axis labels -->
+                        <div id="analysisYAxis" style="display:flex;flex-direction:column;justify-content:space-between;height:120px;padding-bottom:20px;flex-shrink:0;"></div>
+                        <!-- Dot chart -->
+                        <div style="flex:1;overflow:hidden;">
+                            <div id="analysisDotChart" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;height:120px;align-items:end;"></div>
+                            <!-- X axis -->
+                            <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:6px;">
+                                <div style="text-align:center;font-size:9px;font-weight:600;color:rgba(255,255,255,0.3)">Mon</div>
+                                <div style="text-align:center;font-size:9px;font-weight:600;color:rgba(255,255,255,0.3)">Tue</div>
+                                <div style="text-align:center;font-size:9px;font-weight:600;color:rgba(255,255,255,0.3)">Wed</div>
+                                <div style="text-align:center;font-size:9px;font-weight:600;color:rgba(255,255,255,0.3)">Thu</div>
+                                <div style="text-align:center;font-size:9px;font-weight:600;color:rgba(255,255,255,0.3)">Fri</div>
+                                <div style="text-align:center;font-size:9px;font-weight:600;color:rgba(255,255,255,0.3)">Sat</div>
+                                <div style="text-align:center;font-size:9px;font-weight:600;color:rgba(255,255,255,0.3)">Sun</div>
+                            </div>
                         </div>
                     </div>
-                    <span class="text-[9px] text-zinc-600 uppercase font-bold tracking-wider" id="monthlySpentLabel"></span>
+                    <div id="analysisSummary" style="margin-top:12px;font-size:10px;font-weight:600;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.05em;text-align:center;"></div>
                 </div>
             </section>
-
-            <section class="px-0.5">
-                <div class="flex justify-between items-center mb-3.5">
-                    <h2 class="text-[11px] uppercase tracking-widest text-zinc-500 font-bold">Activity Feed</h2>
-                    <button onclick="clearAllDataPrompt()" class="text-[9px] text-red-400/60 hover:text-red-400 transition-colors uppercase tracking-wider font-bold">Reset Ledger</button>
+            <section class="px-1 pb-4">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="section-label">Activity</span>
+                    <button onclick="clearAllDataPrompt()" class="text-[10px] font-bold uppercase tracking-wider" style="color:rgba(239,68,68,0.5)">Reset</button>
                 </div>
-                <div id="activityFeedContainer" class="space-y-3"></div>
+                <div id="activityFeedContainer" class="space-y-2.5"></div>
             </section>
         </main>
+
     </div>
+
+    <!-- Floating + button — centered, glowing -->
+    <button class="fab" onclick="triggerHaptic('success'); document.getElementById('logSheet').classList.add('open'); setLogType(appState.currentLogType || 'bd')">+</button>
 
     <div id="logSheet" class="bottom-sheet fixed bottom-0 left-0 right-0 z-40 premium-glass rounded-t-[32px] border-t border-white/10 p-6 shadow-[0_-20px_50px_rgba(0,0,0,0.8)] max-w-md mx-auto">
         <div class="w-12 h-1 bg-white/10 rounded-full mx-auto mb-5" onclick="document.getElementById('logSheet').classList.remove('open')"></div>
@@ -214,10 +440,12 @@
         </div>
 
         <form id="logForm" onsubmit="saveEntry(event)" class="space-y-4">
-            <div class="grid grid-cols-3 gap-2 bg-white/5 p-1 rounded-xl">
-                <button type="button" onclick="setLogType('bd')" id="type-bd" class="py-2.5 rounded-lg text-xs font-semibold transition-all duration-300 btn-press bg-accentPurple text-black">Balance B/D</button>
-                <button type="button" onclick="setLogType('income')" id="type-income" class="py-2.5 rounded-lg text-xs font-semibold transition-all duration-300 btn-press text-zinc-400">Incoming</button>
-                <button type="button" onclick="setLogType('expense')" id="type-expense" class="py-2.5 rounded-lg text-xs font-semibold transition-all duration-300 btn-press text-zinc-400">Expense</button>
+            <div class="grid grid-cols-5 gap-1.5 bg-white/5 p-1 rounded-xl">
+                <button type="button" onclick="setLogType('bd')" id="type-bd" class="py-2.5 rounded-lg text-[10px] font-semibold transition-all duration-300 btn-press bg-accentPurple text-black">B/D</button>
+                <button type="button" onclick="setLogType('income')" id="type-income" class="py-2.5 rounded-lg text-[10px] font-semibold transition-all duration-300 btn-press text-zinc-400">In</button>
+                <button type="button" onclick="setLogType('expense')" id="type-expense" class="py-2.5 rounded-lg text-[10px] font-semibold transition-all duration-300 btn-press text-zinc-400">Out</button>
+                <button type="button" onclick="setLogType('lend')" id="type-lend" class="py-2.5 rounded-lg text-[10px] font-semibold transition-all duration-300 btn-press text-zinc-400">Lend</button>
+                <button type="button" onclick="setLogType('borrow')" id="type-borrow" class="py-2.5 rounded-lg text-[10px] font-semibold transition-all duration-300 btn-press text-zinc-400">Borrow</button>
             </div>
 
             <div class="flex gap-3">
@@ -241,6 +469,24 @@
                 <input type="text" id="logNote" placeholder="e.g. Freelance project, Coffee" class="bg-transparent w-full text-sm text-white outline-none">
             </div>
 
+            <!-- Lend/Borrow extra fields -->
+            <div id="lendBorrowFields" style="display:none;" class="space-y-3">
+                <div class="bg-white/5 rounded-xl border border-white/5 p-3">
+                    <label class="block text-[9px] text-zinc-500 uppercase tracking-widest font-bold mb-1">Person's Name</label>
+                    <input type="text" id="logPerson" placeholder="e.g. Sakura, Cassidy" class="bg-transparent w-full text-sm text-white outline-none">
+                </div>
+                <div class="flex gap-3">
+                    <div class="flex-grow bg-white/5 rounded-xl border border-white/5 p-3">
+                        <label class="block text-[9px] text-zinc-500 uppercase tracking-widest font-bold mb-1">Due Date (Optional)</label>
+                        <input type="text" id="logDueDate" placeholder="e.g. 30 Jun" class="bg-transparent w-full text-sm text-white outline-none">
+                    </div>
+                    <div class="w-2/5 bg-white/5 rounded-xl border border-white/5 p-3">
+                        <label class="block text-[9px] text-zinc-500 uppercase tracking-widest font-bold mb-1">Interest % (Optional)</label>
+                        <input type="number" id="logInterest" placeholder="0" inputmode="decimal" min="0" max="100" class="bg-transparent w-full text-sm text-white outline-none">
+                    </div>
+                </div>
+            </div>
+
             <div>
                 <label class="block text-[9px] text-zinc-500 uppercase tracking-widest font-bold mb-1.5">Fast Amounts</label>
                 <div class="flex gap-2 overflow-x-auto pb-1" id="quickPillContainer">
@@ -253,6 +499,26 @@
 
             <button type="submit" class="shine-effect w-full py-4 rounded-xl bg-white text-black font-bold text-sm tracking-wide shadow-lg btn-press">COMMIT TO DESK</button>
         </form>
+    </div>
+
+    <!-- Profile Sheet -->
+    <div id="profileSheet" class="bottom-sheet fixed bottom-0 left-0 right-0 z-40 premium-glass rounded-t-[32px] border-t border-white/10 p-6 pb-10 shadow-[0_-20px_50px_rgba(0,0,0,0.8)] max-w-md mx-auto">
+        <div class="w-12 h-1 bg-white/10 rounded-full mx-auto mb-5 cursor-pointer" onclick="triggerHaptic('tick'); document.getElementById('profileSheet').classList.remove('open')"></div>
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h3 class="text-base font-semibold tracking-tight">Your Profile</h3>
+                <p class="text-[10px] text-zinc-500 uppercase tracking-widest font-bold mt-0.5">Personalize Kash</p>
+            </div>
+            <button onclick="triggerHaptic('tick'); document.getElementById('profileSheet').classList.remove('open')" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-xs">✕</button>
+        </div>
+        <div class="space-y-4">
+            <div class="bg-white/5 rounded-xl border border-white/5 p-4">
+                <label class="block text-[9px] text-zinc-500 uppercase tracking-widest font-bold mb-2">Your Name</label>
+                <input type="text" id="profileNameInput" placeholder="Enter your name…" maxlength="30" class="bg-transparent w-full text-lg font-bold text-white outline-none placeholder:text-white/20">
+            </div>
+            <p class="text-[11px] text-zinc-500 leading-relaxed px-1">Your name is only stored on this device, Giving you full control over your data. It makes your greetings feel a little more personal.</p>
+            <button onclick="saveProfileName()" class="shine-effect w-full py-4 rounded-xl bg-white text-black font-bold text-sm tracking-wide shadow-lg btn-press">SAVE NAME</button>
+        </div>
     </div>
 
     <!-- About Sheet -->
@@ -324,115 +590,12 @@
         </div>
     </div>
 
-    <div id="syncModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/80 backdrop-blur-md">
-        <div class="premium-glass max-w-sm w-full rounded-3xl p-6 border border-white/10 text-center space-y-4">
-            <div class="w-14 h-14 bg-accentPurple/10 rounded-full flex items-center justify-center text-xl mx-auto text-accentPurple">☁️</div>
-            <div>
-                <h3 class="text-base font-bold tracking-tight text-white">Google Drive Backup</h3>
-                <p class="text-xs text-zinc-400 mt-1.5 leading-relaxed">Store and sync your asset logs directly within a private cloud container file inside your personal Google Drive.</p>
-            </div>
-            <div class="bg-white/5 p-3 rounded-xl text-left text-xs text-zinc-400 space-y-1.5">
-                <div class="flex justify-between"><span>Status:</span> <span id="driveStatusText" class="text-amber-400 font-medium">Disconnected</span></div>
-            </div>
-            <div class="flex gap-3 pt-1">
-                <button onclick="toggleDriveSync()" id="driveConnectBtn" class="flex-grow py-3 rounded-xl bg-accentPurple text-black font-bold text-xs btn-press">Connect Drive</button>
-                <button onclick="closeSyncModal()" class="px-5 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 font-semibold text-xs btn-press">Dismiss</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // 🚨 PASTE YOUR KEYS HERE EXACTLY BETWEEN THE QUOTES 🚨
-        const GOOGLE_CLIENT_ID = '992426163431-obg7lfsfstleeffikoom0q1bs91qfgqi.apps.googleusercontent.com';
-        const GOOGLE_API_KEY = 'AIzaSyAJtY5uYz_GLmDI-oPD5W1ulrWvdydPmqI';
-        // ----------------------------------------------------
-
-        let tokenClient;
-        let accessToken = null;
-
-        // Load Google Identity Services Script dynamically
-        function loadGoogleAPI() {
-            const script = document.createElement('script');
-            script.src = 'https://accounts.google.com/gsi/client';
-            script.async = true; script.defer = true;
-            script.onload = () => {
-                tokenClient = google.accounts.oauth2.initTokenClient({
-                    client_id: GOOGLE_CLIENT_ID,
-                    scope: 'https://www.googleapis.com/auth/drive.file',
-                    callback: (tokenResponse) => {
-                        if (tokenResponse && tokenResponse.access_token) {
-                            accessToken = tokenResponse.access_token;
-                            handleSuccessfulCloudConnection();
-                        }
-                    }
-                });
-            };
-            document.body.appendChild(script);
-        }
-
-        // --- CLOUD SYNC ENGINE ---
-        async function handleSuccessfulCloudConnection() {
-            appState.isDriveConnected = true;
-            updateSyncUI();
-            showToast('🔄 Searching Drive...');
-
-            try {
-                let fileId = appState.driveFileId;
-                
-                // 1. Search Google Drive for our backup file
-                if (!fileId) {
-                    const searchRes = await fetch('https://www.googleapis.com/drive/v3/files?q=name="asset_desk_data.json" and trashed=false', {
-                        headers: { 'Authorization': `Bearer ${accessToken}` }
-                    }).then(r => r.json());
-                    
-                    if (searchRes.files && searchRes.files.length > 0) {
-                        fileId = searchRes.files[0].id;
-                        appState.driveFileId = fileId;
-                    }
-                }
-
-                // 2. Read existing file OR create new one
-                if (fileId) {
-                    showToast('📥 Downloading Cloud Data...');
-                    const fileData = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
-                        headers: { 'Authorization': `Bearer ${accessToken}` }
-                    }).then(r => r.json());
-                    
-                    appState.logs = fileData.logs || [];
-                    calculateMetrics(); renderActivityFeed();
-                    showToast('✅ Synced with Cloud');
-                } else {
-                    showToast('📝 Creating Backup File...');
-                    const metaRes = await fetch('https://www.googleapis.com/drive/v3/files', {
-                        method: 'POST',
-                        headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ name: 'asset_desk_data.json' })
-                    }).then(r => r.json());
-                    
-                    appState.driveFileId = metaRes.id;
-                    await pushUpdateToDrive();
-                    showToast('✅ Drive Setup Complete');
-                }
-                saveToLocalStorage();
-            } catch (e) { console.error(e); showToast('⚠️ Connection Error'); }
-        }
-
-        async function pushUpdateToDrive() {
-            if (!appState.isDriveConnected || !accessToken || !appState.driveFileId) return;
-            try {
-                await fetch(`https://www.googleapis.com/upload/drive/v3/files/${appState.driveFileId}?uploadType=media`, {
-                    method: 'PATCH',
-                    headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify(appState)
-                });
-            } catch (e) { console.error('Cloud upload failed', e); }
-        }
-
         // --- APP STATE CONTROLS ---
         let appState = {
             currentWallet: 'bank', currentLogType: 'bd',
             wallets: { bank: 0, cash: 0, bkash: 0, nagad: 0 },
-            logs: [], isDriveConnected: false, driveFileId: null
+            logs: [], userName: ''
         };
 
         function saveToLocalStorage() { localStorage.setItem('aura_asset_desk_state_v5', JSON.stringify(appState)); }
@@ -443,13 +606,178 @@
 
         function calculateMetrics() {
             appState.wallets = { bank: 0, cash: 0, bkash: 0, nagad: 0 };
-            appState.logs.forEach(log => {
+            // Process logs in chronological order (logs are stored newest-first, so reverse)
+            const ordered = [...appState.logs].reverse();
+            ordered.forEach(log => {
                 const amt = Number(log.amount);
-                if (log.type === 'bd') appState.wallets[log.wallet] = amt;
-                else if (log.type === 'income') appState.wallets[log.wallet] += amt;
+                if (log.type === 'bd')      appState.wallets[log.wallet] = amt;
+                else if (log.type === 'income')  appState.wallets[log.wallet] += amt;
                 else if (log.type === 'expense') appState.wallets[log.wallet] -= amt;
+                else if (log.type === 'lend')    appState.wallets[log.wallet] -= amt; // money leaves your wallet
+                else if (log.type === 'borrow')  appState.wallets[log.wallet] += amt; // money enters your wallet
             });
-            renderAllWallets(); updatePrimaryAuraOrb(); renderMonthlySpent();
+            renderAllWallets(); updatePrimaryAuraOrb(); renderMonthlySpent(); renderStreaks(); renderWeeklyAnalysis();
+        }
+
+        // --- DAILY STREAK ---
+        function renderStreaks() {
+            const badges = document.getElementById('streakBadges');
+            if (!badges) return;
+            badges.innerHTML = '';
+
+            // Build a set of unique dates that have any log
+            const loggedDates = new Set(appState.logs.map(log => {
+                if (log.timestamp) return new Date(log.timestamp).toDateString();
+                return null;
+            }).filter(Boolean));
+
+            // Get this week Mon–Sun
+            const today = new Date();
+            const dayOfWeek = today.getDay(); // 0=Sun
+            const monday = new Date(today);
+            monday.setDate(today.getDate() - ((dayOfWeek + 6) % 7));
+
+            let streak = 0;
+            const todayStr = today.toDateString();
+
+            for (let i = 0; i < 7; i++) {
+                const d = new Date(monday);
+                d.setDate(monday.getDate() + i);
+                const dStr = d.toDateString();
+                const isToday = dStr === todayStr;
+                const isFuture = d > today;
+                const hasLog = loggedDates.has(dStr);
+                const isPast = d < today && !isToday;
+
+                if (hasLog) streak++;
+
+                const badge = document.createElement('div');
+                badge.style.cssText = `
+                    width:100%;aspect-ratio:1;border-radius:50%;
+                    display:flex;align-items:center;justify-content:center;
+                    position:relative;
+                    transition:all 0.2s;
+                `;
+
+                if (hasLog) {
+                    // Logged — filled purple badge with checkmark
+                    badge.style.background = 'linear-gradient(135deg, #7c3aed, #9d4edd)';
+                    badge.style.border = '1.5px solid rgba(167,139,250,0.6)';
+                    badge.style.boxShadow = '0 0 12px rgba(124,58,237,0.5)';
+                    badge.innerHTML = `<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6L5 8.5L9.5 3.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+                } else if (isToday) {
+                    // Today, not yet logged — pulsing outline
+                    badge.style.background = 'rgba(124,58,237,0.12)';
+                    badge.style.border = '1.5px solid rgba(167,139,250,0.4)';
+                    badge.style.boxShadow = '0 0 0 0 rgba(124,58,237,0.4)';
+                    badge.style.animation = 'streakPulse 2s infinite';
+                    badge.innerHTML = `<div style="width:6px;height:6px;border-radius:50%;background:rgba(167,139,250,0.5)"></div>`;
+                } else if (isFuture) {
+                    // Future — dim placeholder
+                    badge.style.background = 'rgba(255,255,255,0.04)';
+                    badge.style.border = '1.5px solid rgba(255,255,255,0.1)';
+                } else {
+                    // Past, missed
+                    badge.style.background = 'rgba(255,255,255,0.04)';
+                    badge.style.border = '1.5px solid rgba(255,255,255,0.1)';
+                    badge.innerHTML = `<div style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.15)"></div>`;
+                }
+
+                badges.appendChild(badge);
+            }
+
+            const countEl = document.getElementById('streakCount');
+            if (countEl) {
+                countEl.textContent = streak === 0 ? 'No logs this week yet' : `${streak} day${streak > 1 ? 's' : ''} logged this week 🔥`;
+            }
+        }
+
+        // --- WEEKLY ANALYSIS DOT CHART ---
+        function renderWeeklyAnalysis() {
+            const chartEl = document.getElementById('analysisDotChart');
+            const yAxisEl = document.getElementById('analysisYAxis');
+            const summaryEl = document.getElementById('analysisSummary');
+            if (!chartEl) return;
+
+            // Get Mon–Sun of this week
+            const today = new Date();
+            const dayOfWeek = today.getDay();
+            const monday = new Date(today);
+            monday.setDate(today.getDate() - ((dayOfWeek + 6) % 7));
+
+            // Aggregate expenses per day
+            const dailyTotals = Array(7).fill(0);
+            appState.logs.forEach(log => {
+                if (log.type !== 'expense' || !log.timestamp) return;
+                const logDate = new Date(log.timestamp);
+                for (let i = 0; i < 7; i++) {
+                    const d = new Date(monday);
+                    d.setDate(monday.getDate() + i);
+                    if (logDate.toDateString() === d.toDateString()) {
+                        dailyTotals[i] += Number(log.amount);
+                    }
+                }
+            });
+
+            const maxVal = Math.max(...dailyTotals, 1);
+            const DOTS = 6; // dot rows
+
+            // Y-axis
+            yAxisEl.innerHTML = '';
+            for (let i = DOTS; i >= 0; i--) {
+                const label = document.createElement('div');
+                const val = Math.round((maxVal / DOTS) * i);
+                label.style.cssText = 'font-size:9px;font-weight:600;color:rgba(255,255,255,0.25);text-align:right;line-height:1;';
+                label.textContent = val >= 1000 ? (val/1000).toFixed(0)+'k' : val > 0 ? val : '0';
+                yAxisEl.appendChild(label);
+            }
+
+            // Dot columns
+            chartEl.innerHTML = '';
+            const todayIdx = ((today.getDay() + 6) % 7); // 0=Mon
+
+            dailyTotals.forEach((val, di) => {
+                const col = document.createElement('div');
+                col.style.cssText = 'display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;height:100%;';
+
+                const filledDots = maxVal > 0 ? Math.round((val / maxVal) * DOTS) : 0;
+                const isToday = di === todayIdx;
+                const isFuture = di > todayIdx;
+
+                for (let row = DOTS; row >= 1; row--) {
+                    const dot = document.createElement('div');
+                    const isActive = row <= filledDots;
+                    dot.style.cssText = `
+                        width:8px;height:8px;border-radius:50%;flex-shrink:0;
+                        transition:all 0.3s ease;
+                    `;
+                    if (isActive) {
+                        // Filled — purple gradient, brighter at top
+                        const brightness = 0.4 + (row / DOTS) * 0.6;
+                        const isTopDot = row === filledDots;
+                        dot.style.background = isTopDot
+                            ? '#fff'
+                            : `rgba(${Math.round(140 + brightness*60)}, ${Math.round(60 + brightness*40)}, 240, ${brightness})`;
+                        if (isTopDot) dot.style.boxShadow = '0 0 6px rgba(200,160,255,0.9)';
+                    } else {
+                        dot.style.background = isFuture
+                            ? 'rgba(255,255,255,0.04)'
+                            : 'rgba(255,255,255,0.08)';
+                    }
+                    col.appendChild(dot);
+                }
+
+                chartEl.appendChild(col);
+            });
+
+            // Summary
+            const totalWeek = dailyTotals.reduce((a,b) => a+b, 0);
+            const peakDay = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][dailyTotals.indexOf(Math.max(...dailyTotals))];
+            if (summaryEl) {
+                summaryEl.textContent = totalWeek > 0
+                    ? `৳${Number(totalWeek).toLocaleString()} spent this week · peak: ${peakDay}`
+                    : 'No expenses logged this week';
+            }
         }
 
         function renderMonthlySpent() {
@@ -488,60 +816,48 @@
 
         function selectActiveWallet(walletId) {
             triggerHaptic('tick');
-            document.querySelectorAll('.wallet-card').forEach(card => card.classList.remove('border-white/30', 'scale-[1.01]', 'wallet-glow-bank', 'wallet-glow-cash', 'wallet-glow-bkash', 'wallet-glow-nagad'));
+            document.querySelectorAll('.wallet-card').forEach(card => card.classList.remove('wallet-glow-bank', 'wallet-glow-cash', 'wallet-glow-bkash', 'wallet-glow-nagad'));
             const activeCard = document.getElementById(`walletCard-${walletId}`);
-            activeCard.classList.add('border-white/30', 'scale-[1.01]', `wallet-glow-${walletId}`);
+            activeCard.classList.add(`wallet-glow-${walletId}`);
             appState.currentWallet = walletId; updatePrimaryAuraOrb();
         }
 
         function updatePrimaryAuraOrb() {
-            const walletId = appState.currentWallet; const balance = appState.wallets[walletId];
-            const logoMap = { bank: '🏦', cash: '💵', bkash: '📱', nagad: '🍊' };
-            const auraColors = {
-                bank: { border: 'rgba(52, 199, 89, 0.25)', orb: 'rgba(52, 199, 89, 0.12)', progress: '#34c759' },
-                cash: { border: 'rgba(245, 158, 11, 0.25)', orb: 'rgba(245, 158, 11, 0.12)', progress: '#f59e0b' },
-                bkash: { border: 'rgba(236, 72, 153, 0.25)', orb: 'rgba(236, 72, 153, 0.12)', progress: '#ec4899' },
-                nagad: { border: 'rgba(249, 115, 22, 0.25)', orb: 'rgba(249, 115, 22, 0.12)', progress: '#f97316' }
-            };
-
-            const pct = appState.grandTotal > 0 ? Math.round((balance / appState.grandTotal) * 100) : 0;
-            const orb = document.getElementById('primaryAuraOrb'); const colorMeta = auraColors[walletId];
-            
-            orb.style.background = `radial-gradient(circle, ${colorMeta.orb} 0%, rgba(14, 15, 23, 0.85) 80%)`;
-            orb.style.boxShadow = `inset 0 0 25px ${colorMeta.orb}, 0 10px 40px rgba(0, 0, 0, 0.5)`;
-            orb.style.borderColor = colorMeta.border;
-
-            document.getElementById('activeOrbLogo').textContent = logoMap[walletId];
-            document.getElementById('activeOrbWalletName').textContent = walletId;
-            document.getElementById('activeOrbBalance').textContent = formatBDT(balance);
-            document.getElementById('activeOrbPercentage').textContent = `${pct}% of total`;
-
-            const arc = document.getElementById('orbProgressArc'); arc.setAttribute('stroke', colorMeta.progress);
-            const radius = 82; const circumference = 2 * Math.PI * radius;
-            const boundedPct = Math.max(0, Math.min(100, pct));
-            const offset = circumference - (boundedPct / 100) * circumference;
-            arc.style.strokeDasharray = `${circumference}`; arc.style.strokeDashoffset = `${offset}`;
+            // Orb removed in Aura redesign — wallet cards handle active state
         }
 
         function setLogType(type) {
             triggerHaptic('tick'); appState.currentLogType = type;
-            const btnBd = document.getElementById('type-bd'); const btnInc = document.getElementById('type-income'); const btnExp = document.getElementById('type-expense');
-            [btnBd, btnInc, btnExp].forEach(b => b.classList.remove('bg-accentPurple', 'text-black', 'bg-accentGreen', 'bg-amber-400'));
-            
-            const activeBtn = document.getElementById(`type-${type}`); activeBtn.classList.remove('text-zinc-400');
-            if (type === 'bd') activeBtn.classList.add('bg-accentPurple', 'text-black');
-            else if (type === 'income') activeBtn.classList.add('bg-accentGreen', 'text-black');
-            else if (type === 'expense') activeBtn.classList.add('bg-amber-400', 'text-black');
+            const btns = ['bd','income','expense','lend','borrow'];
+            btns.forEach(t => {
+                const b = document.getElementById(`type-${t}`);
+                b.classList.remove('bg-accentPurple','bg-accentGreen','bg-amber-400','bg-blue-500','bg-rose-500','text-black');
+                b.classList.add('text-zinc-400');
+            });
+            const activeBtn = document.getElementById(`type-${type}`);
+            activeBtn.classList.remove('text-zinc-400');
+            if (type === 'bd')      activeBtn.classList.add('bg-accentPurple','text-black');
+            else if (type === 'income')  activeBtn.classList.add('bg-accentGreen','text-black');
+            else if (type === 'expense') activeBtn.classList.add('bg-amber-400','text-black');
+            else if (type === 'lend')    activeBtn.classList.add('bg-blue-500','text-white');
+            else if (type === 'borrow')  activeBtn.classList.add('bg-rose-500','text-white');
 
-            // Hide transaction label for Balance B/D
             const noteWrapper = document.getElementById('logNoteWrapper');
             const noteInput = document.getElementById('logNote');
+            const lendBorrowFields = document.getElementById('lendBorrowFields');
+
             if (type === 'bd') {
                 noteWrapper.style.display = 'none';
                 noteInput.removeAttribute('required');
+                lendBorrowFields.style.display = 'none';
+            } else if (type === 'lend' || type === 'borrow') {
+                noteWrapper.style.display = 'none';
+                noteInput.removeAttribute('required');
+                lendBorrowFields.style.display = '';
             } else {
                 noteWrapper.style.display = '';
                 noteInput.setAttribute('required', 'required');
+                lendBorrowFields.style.display = 'none';
             }
         }
 
@@ -551,87 +867,137 @@
             e.preventDefault(); triggerHaptic('success');
             const amountInput = document.getElementById('logAmount'); const walletInput = document.getElementById('logWallet'); const noteInput = document.getElementById('logNote');
 
+            const amount = Math.abs(Number(amountInput.value));
+            const wallet = walletInput.value;
+            const type = appState.currentLogType;
+
+            // 🛡️ Block expense/lend if it exceeds current wallet balance
+            if (type === 'expense' || type === 'lend') {
+                const currentBalance = appState.wallets[wallet] || 0;
+                if (amount > currentBalance) {
+                    triggerHaptic('tick');
+                    showToast(`⚠️ Insufficient balance in ${wallet.charAt(0).toUpperCase() + wallet.slice(1)} (${formatBDT(currentBalance)})`);
+                    return;
+                }
+            }
+
             const newLog = {
-                id: Date.now(), type: appState.currentLogType, amount: Math.abs(Number(amountInput.value)),
-                wallet: walletInput.value, note: noteInput.value.trim() || 'Log Entry', date: getFormattedDate(), timestamp: new Date().toISOString()
+                id: Date.now(), type: type, amount: amount,
+                wallet: wallet, date: getFormattedDate(), timestamp: new Date().toISOString()
             };
 
-            appState.logs.unshift(newLog); calculateMetrics(); renderActivityFeed(); saveToLocalStorage();
-            pushUpdateToDrive(); // Silent cloud backup trigger
-            amountInput.value = ''; noteInput.value = '';
+            if (type === 'lend' || type === 'borrow') {
+                const person = document.getElementById('logPerson').value.trim();
+                if (!person) { showToast("⚠️ Enter the person's name"); return; }
+                newLog.note = type === 'lend' ? `Lent to ${person}` : `Borrowed from ${person}`;
+                newLog.person = person;
+                newLog.dueDate = document.getElementById('logDueDate').value.trim() || null;
+                const interest = parseFloat(document.getElementById('logInterest').value);
+                newLog.interest = isNaN(interest) ? 0 : interest;
+                document.getElementById('logPerson').value = '';
+                document.getElementById('logDueDate').value = '';
+                document.getElementById('logInterest').value = '';
+            } else {
+                newLog.note = noteInput.value.trim() || 'Log Entry';
+                noteInput.value = '';
+            }
+
+            appState.logs.unshift(newLog); calculateMetrics(); renderActivityFeed(); renderStreaks(); renderWeeklyAnalysis(); saveToLocalStorage();
+            amountInput.value = '';
             document.getElementById('logSheet').classList.remove('open');
             showToast('📊 Entry Committed');
         }
 
         function deleteLog(logId) {
             triggerHaptic('tick'); appState.logs = appState.logs.filter(log => log.id !== logId);
-            calculateMetrics(); renderActivityFeed(); saveToLocalStorage();
-            pushUpdateToDrive(); // Silent cloud backup trigger
+            calculateMetrics(); renderActivityFeed(); renderStreaks(); renderWeeklyAnalysis(); saveToLocalStorage();
             showToast('🗑️ Entry removed');
         }
 
         function renderActivityFeed() {
             const container = document.getElementById('activityFeedContainer'); container.innerHTML = '';
             if (appState.logs.length === 0) {
-                container.innerHTML = `<div class="text-center py-6 premium-glass rounded-2xl border border-dashed border-white/5"><p class="text-xs text-zinc-500">No logs on this desk.</p></div>`;
+                container.innerHTML = `<div class="text-center py-8" style="color:rgba(255,255,255,0.2);font-size:13px;font-weight:500">No transactions yet.<br><span style="font-size:11px;opacity:0.6">Tap + to log your first entry.</span></div>`;
                 return;
             }
 
             appState.logs.forEach(log => {
                 const el = document.createElement('div');
-                el.className = 'premium-glass rounded-2xl p-3.5 flex justify-between items-center transition-all duration-300 transform scale-100';
-                let icon = '🪙'; let amountColor = 'text-white'; let prefix = '';
-                if (log.type === 'bd') { icon = '📥'; amountColor = 'text-accentPurple'; }
-                else if (log.type === 'income') { icon = '💸'; amountColor = 'text-emerald-400'; prefix = '+'; }
-                else if (log.type === 'expense') { icon = '☕'; amountColor = 'text-zinc-300'; prefix = '-'; }
+                el.className = 'activity-card btn-press';
+                el.style.cssText = 'flex-direction:row;align-items:center;gap:14px;min-height:auto;padding:14px 16px;';
+                let icon = '🪙'; let amountColor = '#fff'; let prefix = '';
+                if (log.type === 'bd')      { icon = '📥'; amountColor = '#a78bfa'; }
+                else if (log.type === 'income')  { icon = '💸'; amountColor = '#34d399'; prefix = '+'; }
+                else if (log.type === 'expense') { icon = '☕'; amountColor = '#f87171'; prefix = '-'; }
+                else if (log.type === 'lend')    { icon = '🤝'; amountColor = '#60a5fa'; prefix = '-'; }
+                else if (log.type === 'borrow')  { icon = '📨'; amountColor = '#fb923c'; prefix = '+'; }
+
+                const interestBadge = (log.type === 'lend' || log.type === 'borrow') && log.interest > 0
+                    ? `<span style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:1px 6px;margin-top:3px;display:inline-block">${log.interest}% interest${log.dueDate ? ' · due ' + log.dueDate : ''}</span>`
+                    : (log.dueDate ? `<span style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.3);margin-top:2px;display:inline-block">due ${log.dueDate}</span>` : '');
 
                 el.innerHTML = `
-                    <div class="flex items-center gap-3.5 min-w-0">
-                        <div class="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-center text-base shrink-0 select-none">${icon}</div>
-                        <div class="min-w-0 flex flex-col justify-center">
-                            <p class="text-sm font-medium tracking-tight text-white truncate leading-tight">${log.note}</p>
-                            <p class="text-[9px] uppercase tracking-wider text-zinc-500 font-bold mt-1 leading-none">${log.wallet} • ${log.date}</p>
-                        </div>
+                    <div style="width:40px;height:40px;border-radius:14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">${icon}</div>
+                    <div style="flex:1;min-width:0">
+                        <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.88);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${log.note}</div>
+                        <div style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.07em;margin-top:2px">${log.wallet} · ${log.date}</div>
+                        ${interestBadge}
                     </div>
-                    <div class="flex items-center gap-3 shrink-0 ml-2">
-                        <span class="text-base font-bold tracking-tight ${amountColor}">${prefix}${formatBDT(log.amount)}</span>
-                        <button onclick="deleteLog(${log.id})" class="w-5 h-5 rounded-full bg-white/5 flex items-center justify-center text-[10px] text-zinc-500 hover:bg-red-500/10 hover:text-red-400 transition-colors">✕</button>
+                    <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+                        <span style="font-size:15px;font-weight:800;color:${amountColor};letter-spacing:-0.02em">${prefix}${formatBDT(log.amount)}</span>
+                        <button onclick="deleteLog(${log.id})" style="width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:center;font-size:9px;color:rgba(255,255,255,0.3)">✕</button>
                     </div>
                 `;
                 container.appendChild(el);
             });
         }
 
-        function showSyncOptions() { triggerHaptic('tick'); showToast('🚀 Under Development'); }
-        function closeSyncModal() { triggerHaptic('tick'); document.getElementById('syncModal').classList.add('hidden'); }
-
-        function toggleDriveSync() {
-            triggerHaptic('success');
-            if (!appState.isDriveConnected) {
-                tokenClient.requestAccessToken(); // Triggers Google Login Popup
-            } else {
-                appState.isDriveConnected = false; accessToken = null;
-                updateSyncUI(); saveToLocalStorage();
-                showToast('🔒 Offline Mode');
+        function filterFeed(query) {
+            const q = query.trim().toLowerCase();
+            if (!q) { renderActivityFeed(); return; }
+            const container = document.getElementById('activityFeedContainer');
+            container.innerHTML = '';
+            const filtered = appState.logs.filter(log => {
+                return (
+                    log.note.toLowerCase().includes(q) ||
+                    log.wallet.toLowerCase().includes(q) ||
+                    String(log.amount).includes(q) ||
+                    (log.date && log.date.toLowerCase().includes(q))
+                );
+            });
+            if (filtered.length === 0) {
+                container.innerHTML = `<div style="text-align:center;padding:28px 0;color:rgba(255,255,255,0.2);font-size:13px;font-weight:500">No results for "${query}"</div>`;
+                return;
             }
-        }
-
-        function updateSyncUI() {
-            const btn = document.getElementById('driveConnectBtn'); const statusText = document.getElementById('driveStatusText'); const indicator = document.getElementById('syncCloudIndicator');
-            if (appState.isDriveConnected) {
-                btn.textContent = 'Disconnect'; btn.className = "flex-grow py-3 rounded-xl bg-red-500 text-white font-bold text-xs btn-press";
-                statusText.textContent = 'Active (2TB Backup)'; statusText.className = 'text-emerald-400 font-medium';
-                indicator.textContent = '🟢';
-            } else {
-                btn.textContent = 'Connect Drive'; btn.className = "flex-grow py-3 rounded-xl bg-accentPurple text-black font-bold text-xs btn-press";
-                statusText.textContent = 'Disconnected'; statusText.className = 'text-amber-400 font-medium';
-                indicator.textContent = '☁️';
-            }
+            filtered.forEach(log => {
+                const el = document.createElement('div');
+                el.className = 'activity-card btn-press';
+                el.style.cssText = 'flex-direction:row;align-items:center;gap:14px;min-height:auto;padding:14px 16px;';
+                let icon = '🪙'; let amountColor = '#fff'; let prefix = '';
+                if (log.type === 'bd')      { icon = '📥'; amountColor = '#a78bfa'; }
+                else if (log.type === 'income')  { icon = '💸'; amountColor = '#34d399'; prefix = '+'; }
+                else if (log.type === 'expense') { icon = '☕'; amountColor = '#f87171'; prefix = '-'; }
+                else if (log.type === 'lend')    { icon = '🤝'; amountColor = '#60a5fa'; prefix = '-'; }
+                else if (log.type === 'borrow')  { icon = '📨'; amountColor = '#fb923c'; prefix = '+'; }
+                const interestBadge = (log.type === 'lend' || log.type === 'borrow') && log.interest > 0
+                    ? `<span style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:1px 6px;margin-top:3px;display:inline-block">${log.interest}% interest${log.dueDate ? ' · due ' + log.dueDate : ''}</span>`
+                    : '';
+                el.innerHTML = `
+                    <div style="width:40px;height:40px;border-radius:14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">${icon}</div>
+                    <div style="flex:1;min-width:0">
+                        <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.88);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${log.note}</div>
+                        <div style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.07em;margin-top:2px">${log.wallet} · ${log.date}</div>
+                        ${interestBadge}
+                    </div>
+                    <span style="font-size:15px;font-weight:800;color:${amountColor};letter-spacing:-0.02em">${prefix}${formatBDT(log.amount)}</span>
+                `;
+                container.appendChild(el);
+            });
         }
 
         function clearAllDataPrompt() {
-            if (confirm("Reset ledger data? (This will also clear your Drive backup if connected)")) {
-                appState.logs = []; calculateMetrics(); renderActivityFeed(); saveToLocalStorage(); pushUpdateToDrive(); showToast('✨ Reset complete');
+            if (confirm("Reset ledger data?")) {
+                appState.logs = []; calculateMetrics(); renderActivityFeed(); saveToLocalStorage(); showToast('✨ Reset complete');
             }
         }
 
@@ -655,11 +1021,51 @@
             else if (type === 'success') { osc.type = 'sine'; osc.frequency.setValueAtTime(523.25, now); osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.18); gain.gain.setValueAtTime(0.06, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25); osc.start(now); osc.stop(now + 0.26); }
         }
 
+        // --- PROFILE ---
+        function openProfileSheet() {
+            document.getElementById('profileNameInput').value = appState.userName || '';
+            document.getElementById('profileSheet').classList.add('open');
+        }
+
+        function saveProfileName() {
+            const name = document.getElementById('profileNameInput').value.trim();
+            appState.userName = name;
+            saveToLocalStorage();
+            document.getElementById('profileSheet').classList.remove('open');
+            renderGreeting();
+            triggerHaptic('success');
+            showToast(name ? `👋 Welcome, ${name}!` : '✨ Name cleared');
+        }
+
+        function renderGreeting() {
+            const now = new Date();
+            const hour = now.getHours();
+            const name = appState.userName ? `, ${appState.userName}` : '';
+            const firstName = appState.userName ? appState.userName.split(' ')[0] : '';
+
+            let greetings;
+            if (hour < 12) {
+                greetings = firstName
+                    ? [`Good morning,<br>${firstName}.`, `Rise and track,<br>${firstName}.`, `A new day,<br>${firstName}. Own it.`]
+                    : ["You're ahead of the game!", "Morning momentum!", "Fresh start, fresh money!"];
+            } else if (hour < 17) {
+                greetings = firstName
+                    ? [`You're doing well,<br>${firstName}.`, `Stay focused,<br>${firstName}.`, `Keep it clean,<br>${firstName}.`]
+                    : ["You're in control!", "Keep it balanced!", "Track smart, spend smart!"];
+            } else {
+                greetings = firstName
+                    ? [`Good evening,<br>${firstName}.`, `End strong,<br>${firstName}.`, `Almost there,<br>${firstName}.`]
+                    : ["Evening check-in!", "End the day informed!", "Almost there!"];
+            }
+            document.getElementById('greetingHeadline').innerHTML = greetings[Math.floor(Math.random() * greetings.length)];
+        }
+
         // --- INIT ---
         window.onload = function() {
-            document.getElementById('liveDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'short' });
-            loadGoogleAPI(); loadFromLocalStorage(); calculateMetrics(); renderActivityFeed(); selectActiveWallet('bank'); updateSyncUI();
-            setLogType('bd'); // default — hides transaction label for B/D
+            const now = new Date();
+            document.getElementById('liveDate').textContent = now.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'short' });
+            loadFromLocalStorage(); renderGreeting(); calculateMetrics(); renderActivityFeed(); selectActiveWallet('bank');
+            setLogType('bd');
         }
     </script>
 </body>
