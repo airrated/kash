@@ -466,7 +466,7 @@
 
             <div id="logNoteWrapper" class="bg-white/5 rounded-xl border border-white/5 p-3">
                 <label class="block text-[9px] text-zinc-500 uppercase tracking-widest font-bold mb-1">Transaction Label</label>
-                <input type="text" id="logNote" placeholder="e.g. Freelance project, Coffee" class="bg-transparent w-full text-sm text-white outline-none">
+                <input type="text" id="logNote" placeholder="e.g. Salary, Pocket Money" class="bg-transparent w-full text-sm text-white outline-none">
             </div>
 
             <!-- Lend/Borrow extra fields -->
@@ -857,6 +857,9 @@
             } else {
                 noteWrapper.style.display = '';
                 noteInput.setAttribute('required', 'required');
+                noteInput.placeholder = type === 'income'
+                    ? 'e.g. Salary, Pocket Money'
+                    : 'e.g. Coffee, Groceries';
                 lendBorrowFields.style.display = 'none';
             }
         }
