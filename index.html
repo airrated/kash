@@ -126,17 +126,18 @@
         .action-chip.chip-active { background: rgba(124,58,237,0.2); border-color: rgba(167,139,250,0.5); color: #c4b5fd; }
 
         /* Cards */
+        /* Cards */
         .activity-card {
             background: var(--glass); border: 1px solid var(--glass-border);
             border-radius: 22px; padding: 18px 16px;
             display: flex; flex-direction: column; gap: 4px; min-height: 120px;
             position: relative; overflow: hidden; cursor: pointer; transition: all 0.18s;
             box-shadow: 0 4px 20px rgba(0,0,0,0.2), inset 0 1px 0 var(--glass-hi);
+            
+            /* --- COPY PASTE FIX FOR THE GLOW OVERFLOW BUG --- */
+            -webkit-mask-image: -webkit-radial-gradient(white, black);
+            transform: translateZ(0);
         }
-        .activity-card:active { transform: scale(0.97); }
-        .activity-card-label { font-size: 13px; font-weight: 600; color: var(--text); }
-        .activity-card-sub { font-size: 11px; font-weight: 500; color: var(--text2); }
-        .activity-card-value { font-size: 28px; font-weight: 800; color: var(--text); letter-spacing: -0.04em; margin-top: auto; line-height: 1; }
 
         /* Corner glows */
         .activity-card-glow { position: absolute; bottom: -24px; right: -24px; width: 110px; height: 110px; border-radius: 50%; filter: blur(28px); pointer-events: none; }
