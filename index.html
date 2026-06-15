@@ -26,9 +26,15 @@
         }
     </script>
     
-    <style>
+   <style>
         body {
-            background-color: #0B0C15;
+            /* Sleek dark background with glowing ambient mesh accents exactly like the reference */
+            background-color: #030712;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(147, 51, 234, 0.13) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.08) 0px, transparent 50%);
+            background-attachment: fixed;
             -webkit-user-select: none;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
@@ -36,27 +42,33 @@
             height: 100vh;
         }
 
+        /* Re-engineered true glassmorphism containers matching your screenshot */
         .premium-glass {
-            background: linear-gradient(180deg, rgba(35, 36, 48, 0.6) 0%, rgba(20, 21, 28, 0.45) 100%);
-            backdrop-filter: blur(30px) saturate(180%);
-            -webkit-backdrop-filter: blur(30px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.07);
-            box-shadow: inset 0 1px 0px rgba(255, 255, 255, 0.1), 0 15px 35px rgba(0, 0, 0, 0.4);
+            background: rgba(13, 17, 28, 0.45);
+            backdrop-filter: blur(24px) saturate(160%);
+            -webkit-backdrop-filter: blur(24px) saturate(160%);
+            /* Thick, satin-like semi-transparent border */
+            border: 1.5px solid rgba(255, 255, 255, 0.09);
+            box-shadow: 
+                0 4px 30px rgba(0, 0, 0, 0.4),
+                inset 0 1px 1px rgba(255, 255, 255, 0.1);
         }
 
-        .ambient-orb {
-            position: fixed;
-            top: 25%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 450px; height: 450px;
-            background: radial-gradient(circle, rgba(157, 141, 242, 0.07) 0%, rgba(11, 12, 21, 0) 70%);
-            filter: blur(50px);
-            z-index: -1; pointer-events: none;
-        }
-
+        /* Subtle grid pattern layout overlay */
         .grid-pattern {
             background-image: radial-gradient(rgba(255, 255, 255, 0.015) 1.2px, transparent 1.2px);
-            background-size: 36px 36px;
+            background-size: 32px 32px;
+        }
+
+        /* Clean up ambient orbs to let the mesh background take over */
+        .ambient-orb {
+            position: fixed;
+            top: 20%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(147, 51, 234, 0.08) 0%, rgba(3, 7, 18, 0) 70%);
+            filter: blur(60px);
+            z-index: -1; pointer-events: none;
         }
 
         .shine-effect { position: relative; overflow: hidden; }
@@ -71,31 +83,26 @@
         .bottom-sheet {
             transform: translateY(105%);
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            background: rgba(10, 12, 22, 0.75) !important;
+            backdrop-filter: blur(30px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
+            border-top: 1.5px solid rgba(255, 255, 255, 0.12) !important;
         }
         .bottom-sheet.open { transform: translateY(0); }
 
         .btn-press { transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1); will-change: transform; }
         .btn-press:active { transform: scale(0.97); }
 
-        .wallet-glow-bank * {
-            color: #34c759 !important;
-            text-shadow: 0 0 14px rgba(52, 199, 89, 0.45);
-        }
+        /* Smooth glow effects that sync perfectly with card borders */
+        .wallet-glow-bank { border-color: rgba(52, 199, 89, 0.45) !important; box-shadow: 0 0 15px rgba(52, 199, 89, 0.15); }
+        .wallet-glow-cash { border-color: rgba(245, 158, 11, 0.45) !important; box-shadow: 0 0 15px rgba(245, 158, 11, 0.15); }
+        .wallet-glow-bkash { border-color: rgba(236, 72, 153, 0.45) !important; box-shadow: 0 0 15px rgba(236, 72, 153, 0.15); }
+        .wallet-glow-nagad { border-color: rgba(249, 115, 22, 0.45) !important; box-shadow: 0 0 15px rgba(249, 115, 22, 0.15); }
 
-        .wallet-glow-cash * {
-            color: #f59e0b !important;
-            text-shadow: 0 0 14px rgba(245, 158, 11, 0.45);
-        }
-
-        .wallet-glow-bkash * {
-            color: #ec4899 !important;
-            text-shadow: 0 0 14px rgba(236, 72, 153, 0.45);
-        }
-
-        .wallet-glow-nagad * {
-            color: #f97316 !important;
-            text-shadow: 0 0 14px rgba(249, 115, 22, 0.45);
-        }
+        .wallet-glow-bank * { color: #34c759 !important; }
+        .wallet-glow-cash * { color: #f59e0b !important; }
+        .wallet-glow-bkash * { color: #ec4899 !important; }
+        .wallet-glow-nagad * { color: #f97316 !important; }
 
         .custom-scroll::-webkit-scrollbar { width: 0px; }
     </style>
