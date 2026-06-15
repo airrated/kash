@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Aura Asset Desk</title>
+    <title>Kash</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -92,7 +92,7 @@
         
         <header class="flex justify-between items-center py-5 shrink-0">
             <div>
-                <h1 class="text-2xl font-semibold tracking-tight text-white">Hi Shimanto</h1>
+                <h1 class="text-2xl font-semibold tracking-tight text-white">Hello</h1>
                 <p class="text-[11px] tracking-wider uppercase text-zinc-500 font-bold mt-0.5" id="liveDate">Wednesday, 22 Aug</p>
             </div>
             <div class="flex gap-3">
@@ -211,7 +211,7 @@
             <div class="w-14 h-14 bg-accentPurple/10 rounded-full flex items-center justify-center text-xl mx-auto text-accentPurple">☁️</div>
             <div>
                 <h3 class="text-base font-bold tracking-tight text-white">Google Drive Backup</h3>
-                <p class="text-xs text-zinc-400 mt-1.5 leading-relaxed">Store and sync your asset logs directly within a private cloud container file inside your personal 2TB storage account.</p>
+                <p class="text-xs text-zinc-400 mt-1.5 leading-relaxed">Store and sync your asset logs directly within a private cloud container file inside your personal Google Drive.</p>
             </div>
             <div class="bg-white/5 p-3 rounded-xl text-left text-xs text-zinc-400 space-y-1.5">
                 <div class="flex justify-between"><span>Status:</span> <span id="driveStatusText" class="text-amber-400 font-medium">Disconnected</span></div>
@@ -451,7 +451,7 @@
             });
         }
 
-        function showSyncOptions() { triggerHaptic('tick'); document.getElementById('syncModal').classList.remove('hidden'); }
+        function showSyncOptions() { triggerHaptic('tick'); showToast('🚀 Under Development'); }
         function closeSyncModal() { triggerHaptic('tick'); document.getElementById('syncModal').classList.add('hidden'); }
 
         function toggleDriveSync() {
