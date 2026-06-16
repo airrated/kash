@@ -191,7 +191,7 @@ body.light-mode .top-icon-btn {
         .search-bar:focus-within { border-color: rgba(160,100,255,0.5); box-shadow: 0 0 0 3px rgba(120,60,255,0.12), inset 0 1px 0 var(--glass-hi); }
 
         /* Filter chips */
-        .action-chips { display: flex; gap: 7px; overflow-x: auto; padding-bottom: 2px; }
+        .action-chips { display: flex; gap: 7px; overflow-x: auto; padding-bottom: 2px; position: relative; }
         .action-chips::-webkit-scrollbar { display: none; }
         .action-chip {
             display: flex; align-items: center; gap: 5px;
@@ -414,15 +414,32 @@ body.light-mode .top-icon-btn {
         }
         /* Fallback for iOS Safari standalone (navigator.standalone) */
         body.standalone-ios main#mainScroll { padding-bottom: var(--main-bottom-padding) !important; }
-        body.standalone-ios .fab { bottom: var(--fab-bottom-offset) !important; }
+        body.standalone-ios .fab { bottom: calc(var(--fab-bottom-offset) + 12px) !important; }
         /* Stronger overrides for stubborn iOS A2HS cases (only when detected) */
         :root { --phantom-gap: 0px; }
-        body.standalone-ios { min-height: calc(100vh + var(--phantom-gap)) !important; height: calc(100vh + var(--phantom-gap)) !important; }
-        body.standalone-ios main#mainScroll { padding-bottom: max(12px, calc(var(--main-bottom-padding) - var(--phantom-gap))) !important; }
-        body.standalone-ios .fab { bottom: calc(var(--fab-bottom-offset) - min(var(--phantom-gap), 16px)) !important; }
-        /* Debug badge shown only in standalone to help debugging layout */
-        #standalone-debug { position: fixed; left: 10px; bottom: 10px; z-index:9999; background: rgba(0,0,0,0.6); color: #fff; font-size:11px; padding:6px 8px; border-radius:8px; backdrop-filter: blur(6px); display:none }
-        body.standalone-ios #standalone-debug { display:block }
+        /* Keep body at viewport height to avoid nested flex sizing issues; apply phantom gap to main scroll padding instead */
+        body.standalone-ios { min-height: 100vh !important; height: 100vh !important; }
+        body.standalone-ios main#mainScroll { padding-bottom: calc(var(--main-bottom-padding) + var(--phantom-gap)) !important; }
+        body.standalone-ios .fab { bottom: calc(var(--fab-bottom-offset) + 12px - min(var(--phantom-gap), 16px)) !important; }
+
+        /* Soft fade overlays at left/right edges of the chips row */
+        .action-chips::before, .action-chips::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 22px;
+            pointer-events: none;
+            transition: opacity 0.18s;
+            opacity: 0;
+            z-index: 5;
+            background: linear-gradient(to right, var(--bg), rgba(0,0,0,0));
+            filter: blur(6px);
+        }
+        .action-chips::after { right: 0; left: auto; background: linear-gradient(to left, var(--bg), rgba(0,0,0,0)); }
+        .action-chips::before { left: 0; }
+        .action-chips.has-left::before { opacity: 0.85 }
+        .action-chips.has-right::after { opacity: 0.85 }
     </style>
 </head>
 <body class="text-white grid-pattern relative flex flex-col justify-between select-none">
@@ -453,9 +470,7 @@ body.light-mode .top-icon-btn {
                 document.documentElement.style.setProperty('--main-bottom-padding', mainVal + 'px');
                 document.documentElement.style.setProperty('--fab-bottom-offset', fabVal + 'px');
                 document.documentElement.style.setProperty('--phantom-gap', gap + 'px');
-                // update debug badge if present
-                const dbg = document.getElementById('standalone-debug');
-                if (dbg) dbg.innerText = `gap:${gap}px inner:${window.innerHeight}px screen:${screen.height || 0}px main:${mainVal}px fab:${fabVal}px`;
+                // debug removed
             }
 
             try {
@@ -469,14 +484,30 @@ body.light-mode .top-icon-btn {
                 }
             } catch(e){}
 
-            window.addEventListener('load', adjustStandaloneInsets);
-            window.addEventListener('resize', adjustStandaloneInsets);
-            window.addEventListener('orientationchange', adjustStandaloneInsets);
+            window.addEventListener('load', () => { adjustStandaloneInsets(); initChipsFade(); });
+            window.addEventListener('resize', () => { adjustStandaloneInsets(); updateChipsFade(); });
+            window.addEventListener('orientationchange', () => { adjustStandaloneInsets(); updateChipsFade(); });
+
+            // Chips fade helpers
+            function updateChipsFade(){
+                const chips = document.getElementById('filterChips');
+                if (!chips) return;
+                const left = chips.scrollLeft > 6;
+                const right = chips.scrollWidth - (chips.scrollLeft + chips.clientWidth) > 6;
+                chips.classList.toggle('has-left', left);
+                chips.classList.toggle('has-right', right);
+            }
+            function initChipsFade(){
+                const chips = document.getElementById('filterChips');
+                if (!chips) return;
+                chips.addEventListener('scroll', updateChipsFade, { passive:true });
+                // initial
+                setTimeout(updateChipsFade, 60);
+            }
         })();
     </script>
 
 <div class="ambient-orb"></div>
-<div id="standalone-debug" aria-hidden="true"></div>
 <div class="ambient-orb-2"></div>
 <div class="ambient-orb-3"></div>
 <div class="ambient-orb-4"></div>
