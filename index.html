@@ -147,12 +147,6 @@ body.light-mode .top-icon-btn {
             background: radial-gradient(circle, rgba(52,199,89,0.12) 0%, transparent 70%);
             filter: blur(45px); z-index: 0; pointer-events: none;
         }
-        .section-glow-wrap { position: relative; overflow: visible; }
-        .section-glow-wrap::before {
-            content: ''; position: absolute; inset: -8px;
-            background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(124,58,237,0.08) 0%, transparent 70%);
-            pointer-events: none; z-index: -1;
-        }
 
         /* Typography */
         .greeting-sub { color: var(--text2); font-size: 12.5px; font-weight: 500; letter-spacing: 0.01em; }
@@ -206,8 +200,9 @@ body.light-mode .top-icon-btn {
             font-size: 12px; font-weight: 600; color: var(--text2);
             white-space: nowrap; flex-shrink: 0; cursor: pointer; transition: all 0.15s;
         }
+        .action-chip:not(.chip-active) { filter: blur(0.3px); opacity: 0.72; }
         .action-chip:active { opacity: 0.7; transform: scale(0.97); }
-        .action-chip.chip-active { background: rgba(124,58,237,0.2); border-color: rgba(167,139,250,0.5); color: #c4b5fd; }
+        .action-chip.chip-active { background: rgba(124,58,237,0.2); border-color: rgba(167,139,250,0.5); color: #c4b5fd; filter: none; opacity: 1; }
 
         /* Cards */
         .activity-card {
@@ -248,20 +243,27 @@ body.light-mode .top-icon-btn {
         .wallet-glow-nagad { border-color: rgba(249,115,22,0.55) !important; box-shadow: 0 0 24px rgba(249,115,22,0.15), inset 0 1px 0 var(--glass-hi) !important; }
         .wallet-glow-bank .card-value  { color: #4ade80 !important; }
         .wallet-glow-cash .card-value  { color: #fbbf24 !important; }
+        .wallet-card.pulse-glow::after { animation: walletGlowPulse 2s ease-out forwards; }
+        @keyframes walletGlowPulse {
+            0% { box-shadow: 0 0 12px rgba(255,255,255,0.22), 0 0 0 rgba(255,255,255,0); transform: scale(0.975); }
+            30% { box-shadow: 0 0 42px rgba(255,255,255,0.35), 0 0 65px rgba(255,255,255,0.22); transform: scale(1.02); }
+            65% { box-shadow: 0 0 38px rgba(255,255,255,0.28), 0 0 55px rgba(255,255,255,0.18); transform: scale(1.01); }
+            100% { box-shadow: 0 0 18px rgba(255,255,255,0.20), 0 0 0 rgba(255,255,255,0); transform: scale(0.99); }
+        }
         .wallet-glow-bkash .card-value { color: #f472b6 !important; }
         .wallet-glow-nagad .card-value { color: #fb923c !important; }
 
         /* FAB */
         .fab {
-            position: fixed; bottom: calc(24px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%);
+            position: fixed; bottom: calc(30px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%);
             z-index: 30; width: 58px; height: 58px; border-radius: 50%;
             background: rgba(255,255,255,0.95); border: 1px solid rgba(255,255,255,0.6);
             display: flex; align-items: center; justify-content: center;
             font-size: 26px; font-weight: 300; color: #1a0835; line-height: 1;
-            box-shadow: 0 0 30px rgba(160,100,255,0.5), 0 8px 24px rgba(0,0,0,0.4);
+            box-shadow: 0 0 30px rgba(160,100,255,0.5);
             cursor: pointer; transition: transform 0.15s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.15s;
         }
-        .fab:active { transform: translateX(-50%) scale(0.93); box-shadow: 0 0 20px rgba(160,100,255,0.35), 0 4px 14px rgba(0,0,0,0.35); }
+        .fab:active { transform: translateX(-50%) scale(0.93); box-shadow: 0 0 20px rgba(160,100,255,0.35); }
 
         /* Shine effect */
         .shine-effect { position: relative; overflow: hidden; }
@@ -322,13 +324,15 @@ body.light-mode .top-icon-btn {
         .support-card.revealed .support-hint { display: none; }
 
         /* Weekly chart */
-        .weekly-chart-wrap { display: flex; gap: 8px; align-items: stretch; }
-        .weekly-y-axis { display: flex; flex-direction: column; justify-content: space-between; height: 100px; flex-shrink: 0; min-width: 32px; padding-bottom: 18px; }
-        .weekly-bars { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; height: 100px; align-items: end; flex: 1; min-width: 0; }
-        .weekly-bar-col { display: flex; flex-direction: column; align-items: stretch; justify-content: flex-end; gap: 4px; height: 100%; min-width: 0; }
-        .weekly-bar-stack { display: flex; align-items: flex-end; gap: 4px; width: 100%; min-height: 0; }
-        .weekly-bar { flex: 1 1 0; min-width: 0; border-radius: 4px 4px 0 0; transition: height 0.4s ease; min-height: 0; }
+        .weekly-chart-wrap { display: flex; gap: 8px; align-items: stretch; position: relative; }
+        .weekly-chart-wrap::before { content: ''; position: absolute; left: 0; right: 0; bottom: 10px; height: 1px; background: rgba(255,255,255,0.12); filter: blur(1px); pointer-events: none; }
+        .weekly-y-axis { display: flex; flex-direction: column; justify-content: space-between; height: 82px; flex-shrink: 0; min-width: 26px; padding-bottom: 14px; opacity: 0.88; }
+        .weekly-bars { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; height: 82px; align-items: end; flex: 1; min-width: 0; }
+        .weekly-bar-col { display: flex; flex-direction: column; align-items: stretch; justify-content: flex-end; gap: 2px; height: 100%; min-width: 0; }
+        .weekly-bar-stack { display: flex; align-items: flex-end; gap: 4px; width: 100%; justify-content: center; min-height: 0; }
+        .weekly-bar { flex: none; width: 10px; border-radius: 10px 10px 0 0; transition: height 0.4s ease; min-height: 0; box-shadow: 0 0 20px rgba(255,255,255,0.16), inset 0 0 12px rgba(255,255,255,0.12); }
         .weekly-labels { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-top: 6px; }
+        .weekly-labels div { filter: blur(0.25px); opacity: 0.88; }
 
         /* Wallet history */
         .wallet-history-item { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; padding: 12px 14px; border-radius: 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); }
@@ -336,7 +340,8 @@ body.light-mode .top-icon-btn {
         .wallet-action-btn { flex: 1; padding: 10px; border-radius: 12px; font-size: 10px; font-weight: 700; text-align: center; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); }
 
         /* Top bar */
-        .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px 12px; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px 12px; position: relative; }
+        .top-bar::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 10px; background: linear-gradient(180deg, rgba(255,255,255,0.12), transparent); filter: blur(8px); pointer-events: none; }
         .top-bar-title { font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: -0.01em; }
         .top-bar-badge { font-size: 10px; font-weight: 700; color: var(--text3); background: var(--glass); padding: 2px 8px; border-radius: 20px; border: 1px solid var(--glass-border); }
         .top-icon-btn { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; background: linear-gradient(145deg, rgba(255,255,255,0.11) 0%, rgba(255,255,255,0.04) 100%); border: 1px solid rgba(255,255,255,0.12); box-shadow: inset 0 1px 0 rgba(255,255,255,0.13), 0 1px 5px rgba(0,0,0,0.18); }
@@ -353,8 +358,8 @@ body.light-mode .top-icon-btn {
         .sheet-input { background: transparent; width: 100%; color: var(--text); outline: none; }
 
         /* Progress bar */
-        .progress-track { height: 4px; border-radius: 999px; background: rgba(255,255,255,0.08); overflow: hidden; }
-        .progress-fill { height: 100%; border-radius: 999px; transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+        .progress-track { height: 4px; border-radius: 999px; background: rgba(255,255,255,0.08); overflow: hidden; filter: blur(0.6px); }
+        .progress-fill { height: 100%; border-radius: 999px; transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 0 10px rgba(255,255,255,0.12); }
 
         /* Log feed swipe-to-delete container */
         .feed-item-wrapper { position: relative; overflow: hidden; border-radius: 18px; }
@@ -425,7 +430,7 @@ body.light-mode .top-icon-btn {
                 <svg viewBox="0 0 787.3 787.3" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="m694.65,0H92.66C41.48,0,0,41.48,0,92.66v601.99c0,51.17,41.48,92.66,92.66,92.66h601.99c51.17,0,92.66-41.48,92.66-92.66V92.66c0-51.17-41.48-92.66-92.66-92.66Zm-360.6,634.25h-153.45V155.41h153.45v478.84Zm53.9,0v-180c10.19-1.76,20.66-2.69,31.35-2.69,100.89,0,182.69,81.79,182.69,182.69h-214.04Zm214.04-350.57l-214.04,138.5v-138.5l214.04-128.27v128.27Z"/></svg>
             </div>
             <span class="top-bar-title">Kash</span>
-            <span class="top-bar-badge">1.8</span>
+            <span class="top-bar-badge">1.81</span>
         </button>
         <div class="flex items-center gap-1.5">
             <button onclick="triggerHaptic('tick'); toggleTheme()" class="top-icon-btn btn-press" id="themeBtn" title="Toggle theme"><span class="icon icon-white" id="themeBtnIcon"></span></button>
@@ -580,7 +585,7 @@ body.light-mode .top-icon-btn {
         </section>
 
         <!-- Weekly Net Chart -->
-        <section class="px-1 pb-2 section-glow-wrap" style="overflow:visible">
+        <section class="px-1 pb-2" style="overflow:visible">
             <div class="activity-card" style="min-height:auto; padding: 16px 18px 18px; gap:0; overflow:visible;">
                 <div class="flex justify-between items-center mb-4">
                     <span style="font-size:14px;font-weight:700;color:var(--text);letter-spacing:-0.01em">Weekly Snapshot</span>
@@ -613,7 +618,7 @@ body.light-mode .top-icon-btn {
 <button class="fab" onclick="triggerHaptic('success'); openSheet('logSheet'); setLogType(appState.currentLogType || 'bd')">+</button>
 
 <!-- ============ LOG SHEET ============ -->
-<div id="logSheet" class="bottom-sheet frosted-sheet fixed bottom-0 left-0 right-0 z-40 rounded-t-[32px] p-6 shadow-[0_-20px_50px_rgba(0,0,0,0.5)] max-w-md mx-auto" style="max-height:92vh;overflow-y:auto">
+<div id="logSheet" class="bottom-sheet frosted-sheet fixed bottom-0 left-0 right-0 z-40 rounded-t-[32px] p-6 max-w-md mx-auto" style="max-height:92vh;overflow-y:auto">
     <div class="w-12 h-1 rounded-full mx-auto mb-5 cursor-pointer" style="background:rgba(255,255,255,0.1)" onclick="closeSheet('logSheet')"></div>
     <div class="flex justify-between items-center mb-4">
         <h3 class="text-base font-semibold tracking-tight">Add New Log</h3>
@@ -679,7 +684,7 @@ body.light-mode .top-icon-btn {
 </div>
 
 <!-- ============ PROFILE SHEET ============ -->
-<div id="profileSheet" class="bottom-sheet fixed bottom-0 left-0 right-0 z-40 premium-glass rounded-t-[32px] p-6 pb-10 shadow-[0_-20px_50px_rgba(0,0,0,0.8)] max-w-md mx-auto">
+<div id="profileSheet" class="bottom-sheet fixed bottom-0 left-0 right-0 z-40 premium-glass rounded-t-[32px] p-6 pb-10 max-w-md mx-auto">
     <div class="w-12 h-1 rounded-full mx-auto mb-5 cursor-pointer" style="background:rgba(255,255,255,0.1)" onclick="closeSheet('profileSheet')"></div>
     <div class="flex justify-between items-center mb-6">
         <div>
@@ -710,7 +715,7 @@ body.light-mode .top-icon-btn {
 </div>
 
 <!-- ============ BUDGET SHEET ============ -->
-<div id="budgetSheet" class="bottom-sheet fixed bottom-0 left-0 right-0 z-40 premium-glass rounded-t-[32px] p-6 pb-10 shadow-[0_-20px_50px_rgba(0,0,0,0.8)] max-w-md mx-auto" style="max-height:85vh;overflow-y:auto">
+<div id="budgetSheet" class="bottom-sheet fixed bottom-0 left-0 right-0 z-40 premium-glass rounded-t-[32px] p-6 pb-10 max-w-md mx-auto" style="max-height:85vh;overflow-y:auto">
     <div class="w-12 h-1 rounded-full mx-auto mb-5 cursor-pointer" style="background:rgba(255,255,255,0.1)" onclick="closeSheet('budgetSheet')"></div>
     <div class="flex justify-between items-center mb-6">
         <div>
@@ -742,7 +747,7 @@ body.light-mode .top-icon-btn {
 </div>
 
 <!-- ============ LEND/BORROW LEDGER SHEET ============ -->
-<div id="lendLedgerSheet" class="bottom-sheet fixed bottom-0 left-0 right-0 z-40 premium-glass rounded-t-[32px] p-6 pb-10 shadow-[0_-20px_50px_rgba(0,0,0,0.8)] max-w-md mx-auto" style="max-height:88vh;overflow-y:auto">
+<div id="lendLedgerSheet" class="bottom-sheet fixed bottom-0 left-0 right-0 z-40 premium-glass rounded-t-[32px] p-6 pb-10 max-w-md mx-auto" style="max-height:88vh;overflow-y:auto">
     <div class="w-12 h-1 rounded-full mx-auto mb-5 cursor-pointer" style="background:rgba(255,255,255,0.1)" onclick="closeSheet('lendLedgerSheet')"></div>
     <div class="flex justify-between items-center mb-2">
         <div>
@@ -772,7 +777,7 @@ body.light-mode .top-icon-btn {
 </div>
 
 <!-- ============ ABOUT SHEET ============ -->
-<div id="aboutSheet" class="bottom-sheet fixed bottom-0 left-0 right-0 z-40 premium-glass rounded-t-[32px] p-6 pb-10 shadow-[0_-20px_50px_rgba(0,0,0,0.8)] max-w-md mx-auto" style="max-height:85vh;overflow-y:auto">
+<div id="aboutSheet" class="bottom-sheet fixed bottom-0 left-0 right-0 z-40 premium-glass rounded-t-[32px] p-6 pb-10 max-w-md mx-auto" style="max-height:85vh;overflow-y:auto">
     <div class="w-12 h-1 rounded-full mx-auto mb-5 cursor-pointer" style="background:rgba(255,255,255,0.1)" onclick="closeSheet('aboutSheet')"></div>
     <div class="flex justify-between items-center mb-6">
         <div class="flex items-center gap-3">
@@ -797,14 +802,14 @@ body.light-mode .top-icon-btn {
         <div class="flex flex-col gap-3">
             <a href="https://www.instagram.com/air.dw/" target="_blank" rel="noreferrer noopener" class="inline-flex items-center justify-center gap-2 self-start rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-widest transition" style="border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#f472b6">Contact</a>
             <div class="pt-2" style="border-top:1px solid rgba(255,255,255,0.05)">
-                <p class="text-[11px] italic" style="color:rgba(255,255,255,0.3)">— Kash v1.8 (Beta) by <span style="color:rgba(255,255,255,0.5);font-weight:500">air.</span></p>
+                <p class="text-[11px] italic" style="color:rgba(255,255,255,0.3)">— Kash v1.81 (Beta) by <span style="color:rgba(255,255,255,0.5);font-weight:500">air.</span></p>
             </div>
         </div>
     </div>
 </div>
 
 <!-- ============ DONATE SHEET ============ -->
-<div id="donateSheet" class="bottom-sheet fixed bottom-0 left-0 right-0 z-40 premium-glass rounded-t-[32px] p-6 pb-10 shadow-[0_-20px_50px_rgba(0,0,0,0.8)] max-w-md mx-auto">
+<div id="donateSheet" class="bottom-sheet fixed bottom-0 left-0 right-0 z-40 premium-glass rounded-t-[32px] p-6 pb-10 max-w-md mx-auto">
     <div class="w-12 h-1 rounded-full mx-auto mb-5" style="background:rgba(255,255,255,0.1)" onclick="closeSheet('donateSheet')"></div>
     <div class="flex justify-between items-center mb-5">
         <h3 class="text-base font-semibold tracking-tight">Support Kash 💛</h3>
@@ -834,7 +839,7 @@ body.light-mode .top-icon-btn {
 </div>
 
 <!-- ============ IMPORT SHEET ============ -->
-<div id="importSheet" class="bottom-sheet frosted-sheet fixed bottom-0 left-0 right-0 z-40 rounded-t-[32px] p-6 shadow-[0_-20px_50px_rgba(0,0,0,0.5)] max-w-md mx-auto" style="max-height:80vh;overflow-y:auto">
+<div id="importSheet" class="bottom-sheet frosted-sheet fixed bottom-0 left-0 right-0 z-40 rounded-t-[32px] p-6 max-w-md mx-auto" style="max-height:80vh;overflow-y:auto">
     <div class="w-12 h-1 rounded-full mx-auto mb-5 cursor-pointer" style="background:rgba(255,255,255,0.1)" onclick="closeSheet('importSheet')"></div>
     <div class="flex justify-between items-center mb-5">
         <div>
@@ -856,7 +861,7 @@ body.light-mode .top-icon-btn {
 </div>
 
 <!-- ============ WALLET SHEET ============ -->
-<div id="walletSheet" class="bottom-sheet frosted-sheet fixed bottom-0 left-0 right-0 z-40 rounded-t-[32px] p-6 shadow-[0_-20px_50px_rgba(0,0,0,0.5)] max-w-md mx-auto" style="max-height:88vh;overflow-y:auto">
+<div id="walletSheet" class="bottom-sheet frosted-sheet fixed bottom-0 left-0 right-0 z-40 rounded-t-[32px] p-6 max-w-md mx-auto" style="max-height:88vh;overflow-y:auto">
     <div class="w-12 h-1 rounded-full mx-auto mb-5 cursor-pointer" style="background:rgba(255,255,255,0.1)" onclick="closeSheet('walletSheet')"></div>
     <div class="flex justify-between items-center mb-4">
         <div class="flex items-center gap-3">
@@ -1170,6 +1175,7 @@ function addWalletLog(wallet, type, amount, note) {
         document.getElementById('walletSheetBalance').textContent = formatBDT(appState.wallets[wallet]);
         renderWalletHistory(wallet);
     }
+    flashWalletGlow(wallet);
     showToast('Entry logged');
 }
 
@@ -1182,6 +1188,18 @@ function checkMonthlyBankInterest() {
     addWalletLog('bank', 'income', meta.monthlyInterest, 'Bank Interest (Monthly)');
     meta.lastInterestMonth = monthKey;
     saveState();
+}
+
+const walletGlowTimers = {};
+function flashWalletGlow(walletId) {
+    const walletCard = document.getElementById(`walletCard-${walletId}`);
+    if (!walletCard) return;
+    walletCard.classList.add('pulse-glow');
+    if (walletGlowTimers[walletId]) clearTimeout(walletGlowTimers[walletId]);
+    walletGlowTimers[walletId] = setTimeout(() => {
+        walletCard.classList.remove('pulse-glow');
+        delete walletGlowTimers[walletId];
+    }, 2000);
 }
 
 // ==================== WALLET SELECTION ====================
@@ -1247,15 +1265,19 @@ function saveEntry(e) {
     calculateMetrics(); renderActivityFeed(); saveState();
     document.getElementById('logAmount').value = '';
     closeSheet('logSheet');
+    flashWalletGlow(wallet);
     showToast('Entry logged');
 }
 
 // ==================== DELETE LOG ====================
 function deleteLog(id) {
     triggerHaptic('tick');
+    const log = appState.logs.find(l => l.id === id);
+    const wallet = log ? log.wallet : null;
     appState.logs = appState.logs.filter(l => l.id !== id);
     calculateMetrics(); renderActivityFeed(); saveState();
     if (document.getElementById('walletSheet').classList.contains('open')) renderWalletHistory(currentWalletSheet);
+    if (wallet) flashWalletGlow(wallet);
     showToast('Removed');
 }
 
@@ -1263,8 +1285,10 @@ function deleteLog(id) {
 function settleLog(id) {
     triggerHaptic('success');
     const log = appState.logs.find(l => l.id === id);
+    const wallet = log ? log.wallet : null;
     if (log) { log.settled = true; }
     calculateMetrics(); renderActivityFeed(); renderLedger(); saveState();
+    if (wallet) flashWalletGlow(wallet);
     showToast('Settled!');
 }
 
