@@ -101,7 +101,7 @@ body.light-mode .top-icon-btn {
             min-height: 100dvh;
             color: var(--text);
             transition: background-color 0.3s;
-            padding: max(8px, calc(env(safe-area-inset-top) - 8px)) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            padding: max(8px, calc(env(safe-area-inset-top) - 8px)) env(safe-area-inset-right) max(16px, env(safe-area-inset-bottom)) env(safe-area-inset-left);
         }
         body.light-mode {
             background-image:
@@ -436,7 +436,7 @@ body.light-mode .top-icon-btn {
     </header>
 
     <!-- Main scroll area -->
-    <main class="flex-grow overflow-y-auto custom-scroll px-4 space-y-5 pb-32" id="mainScroll" style="padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right));overflow-x:clip">
+    <main class="flex-grow overflow-y-auto custom-scroll px-4 space-y-5 pb-32" id="mainScroll" style="padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right));padding-bottom:calc(32px + env(safe-area-inset-bottom));overflow-x:clip">
 
         <!-- Greeting -->
         <section class="px-2 pt-2 pb-1">
