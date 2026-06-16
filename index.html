@@ -416,9 +416,10 @@ body.light-mode .top-icon-btn {
         body.standalone-ios main#mainScroll { padding-bottom: var(--main-bottom-padding) !important; }
         body.standalone-ios .fab { bottom: var(--fab-bottom-offset) !important; }
         /* Stronger overrides for stubborn iOS A2HS cases (only when detected) */
-        body.standalone-ios { min-height: 100vh !important; height: 100vh !important; }
-        body.standalone-ios main#mainScroll { padding-bottom: 36px !important; }
-        body.standalone-ios .fab { bottom: 12px !important; }
+        :root { --phantom-gap: 0px; }
+        body.standalone-ios { min-height: calc(100vh + var(--phantom-gap)) !important; height: calc(100vh + var(--phantom-gap)) !important; }
+        body.standalone-ios main#mainScroll { padding-bottom: max(12px, calc(var(--main-bottom-padding) - var(--phantom-gap))) !important; }
+        body.standalone-ios .fab { bottom: calc(var(--fab-bottom-offset) - min(var(--phantom-gap), 16px)) !important; }
         /* Debug badge shown only in standalone to help debugging layout */
         #standalone-debug { position: fixed; left: 10px; bottom: 10px; z-index:9999; background: rgba(0,0,0,0.6); color: #fff; font-size:11px; padding:6px 8px; border-radius:8px; backdrop-filter: blur(6px); display:none }
         body.standalone-ios #standalone-debug { display:block }
@@ -451,6 +452,7 @@ body.light-mode .top-icon-btn {
                 }
                 document.documentElement.style.setProperty('--main-bottom-padding', mainVal + 'px');
                 document.documentElement.style.setProperty('--fab-bottom-offset', fabVal + 'px');
+                document.documentElement.style.setProperty('--phantom-gap', gap + 'px');
                 // update debug badge if present
                 const dbg = document.getElementById('standalone-debug');
                 if (dbg) dbg.innerText = `gap:${gap}px inner:${window.innerHeight}px screen:${screen.height || 0}px main:${mainVal}px fab:${fabVal}px`;
