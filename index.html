@@ -406,14 +406,15 @@ body.light-mode .top-icon-btn {
         .notif-dot { width: 7px; height: 7px; border-radius: 50%; background: #f87171; position: absolute; top: 6px; right: 6px; border: 1.5px solid var(--bg); }
 
         /* Standalone / Add-to-Home adjustments (iOS PWA) */
+        :root { --main-bottom-padding: calc(48px + env(safe-area-inset-bottom)); --fab-bottom-offset: calc(12px + env(safe-area-inset-bottom)); }
         @media (display-mode: standalone) {
             body { padding-bottom: max(8px, env(safe-area-inset-bottom)); }
-            main#mainScroll { padding-bottom: calc(48px + env(safe-area-inset-bottom)) !important; }
-            .fab { bottom: calc(12px + env(safe-area-inset-bottom)) !important; }
+            main#mainScroll { padding-bottom: var(--main-bottom-padding) !important; }
+            .fab { bottom: var(--fab-bottom-offset) !important; }
         }
         /* Fallback for iOS Safari standalone (navigator.standalone) */
-        body.standalone-ios main#mainScroll { padding-bottom: calc(48px + env(safe-area-inset-bottom)) !important; }
-        body.standalone-ios .fab { bottom: calc(12px + env(safe-area-inset-bottom)) !important; }
+        body.standalone-ios main#mainScroll { padding-bottom: var(--main-bottom-padding) !important; }
+        body.standalone-ios .fab { bottom: var(--fab-bottom-offset) !important; }
     </style>
 </head>
 <body class="text-white grid-pattern relative flex flex-col justify-between select-none">
@@ -421,9 +422,33 @@ body.light-mode .top-icon-btn {
         (function(){
             const isStandalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone || false;
             if (isStandalone) document.body.classList.add('standalone-ios');
+
+            function adjustStandaloneInsets(){
+                const runningStandalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone || false;
+                if (!runningStandalone) return;
+                const gap = Math.max(0, Math.round((screen.height || window.outerHeight) - (window.innerHeight || document.documentElement.clientHeight)));
+                const baseMain = 48; // default main bottom padding
+                const baseFab = 12;  // default fab offset
+                const mainVal = Math.max(12, baseMain - gap);
+                const fabVal = Math.max(8, baseFab - Math.round(gap / 2));
+                document.documentElement.style.setProperty('--main-bottom-padding', mainVal + 'px');
+                document.documentElement.style.setProperty('--fab-bottom-offset', fabVal + 'px');
+            }
+
             try {
-                if (window.matchMedia) window.matchMedia('(display-mode: standalone)').addEventListener('change', e => { if (e.matches) document.body.classList.add('standalone-ios'); else document.body.classList.remove('standalone-ios'); });
+                if (window.matchMedia) {
+                    const mq = window.matchMedia('(display-mode: standalone)');
+                    if (mq.matches) adjustStandaloneInsets();
+                    mq.addEventListener('change', e => {
+                        if (e.matches) { document.body.classList.add('standalone-ios'); adjustStandaloneInsets(); }
+                        else { document.body.classList.remove('standalone-ios'); document.documentElement.style.removeProperty('--main-bottom-padding'); document.documentElement.style.removeProperty('--fab-bottom-offset'); }
+                    });
+                }
             } catch(e){}
+
+            window.addEventListener('load', adjustStandaloneInsets);
+            window.addEventListener('resize', adjustStandaloneInsets);
+            window.addEventListener('orientationchange', adjustStandaloneInsets);
         })();
     </script>
 
