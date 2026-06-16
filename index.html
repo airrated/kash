@@ -139,7 +139,9 @@
         .activity-card-value { font-size: 28px; font-weight: 800; color: var(--text); letter-spacing: -0.04em; margin-top: auto; line-height: 1; }
 
         /* Corner glows */
-        .activity-card-glow { position: absolute; bottom: -24px; right: -24px; width: 110px; height: 110px; border-radius: 50%; filter: blur(28px); pointer-events: none; }
+        .activity-card-glow { position: absolute; bottom: -55px; right: -55px; width: 110px; height: 110px; border-radius: 50%; filter: blur(28px); pointer-events: none; }
+        .wallet-card { overflow: visible; }
+        .wallet-card .activity-card-glow { z-index: -1; }
         .card-glow-bank  { background: rgba(52,199,89,0.28); }
         .card-glow-cash  { background: rgba(245,158,11,0.28); }
         .card-glow-bkash { background: rgba(236,72,153,0.28); }
@@ -210,7 +212,9 @@
 
         /* Log feed swipe-to-delete container */
         .feed-item-wrapper { position: relative; overflow: hidden; border-radius: 18px; }
-        .feed-item-delete-bg { position: absolute; right: 0; top: 0; bottom: 0; width: 80px; background: rgba(239,68,68,0.18); border-radius: 18px; display: flex; align-items: center; justify-content: center; color: #ef4444; font-size: 18px; }
+        .feed-item-delete-bg { position: absolute; right: 0; top: 0; bottom: 0; width: 80px; display: flex; align-items: center; justify-content: center; }
+        .feed-item-delete-bg .swipe-delete-btn { width: 34px; height: 34px; border-radius: 50%; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.25); display: flex; align-items: center; justify-content: center; color: #f87171; font-size: 13px; transition: transform 0.15s; }
+        .feed-item-delete-bg .swipe-delete-btn:active { transform: scale(0.9); }
         .feed-item-inner { position: relative; transition: transform 0.2s ease; border-radius: 18px; }
         .feed-item-inner.swiped { transform: translateX(-80px); }
 
@@ -291,27 +295,6 @@
         <section class="px-2 pt-2 pb-1">
             <p class="greeting-sub" id="liveDate">Tuesday, 16 Jun</p>
             <h1 class="greeting-main mt-1" id="greetingHeadline">You're in control<br>of your money!</h1>
-        </section>
-
-        <!-- Search bar -->
-        <section class="px-1">
-            <div class="search-bar">
-                <span style="color:var(--text3);font-size:14px">🔍</span>
-                <input type="text" id="searchInput" placeholder="Search logs, amounts, dates…" oninput="filterFeed(this.value)" style="color:var(--text)" />
-                <button id="searchClearBtn" onclick="clearSearch()" style="display:none;color:var(--text3);font-size:12px;padding:2px 6px;border-radius:99px;background:rgba(255,255,255,0.07);border:none">✕</button>
-            </div>
-        </section>
-
-        <!-- Filter chips -->
-        <section class="px-1">
-            <div class="action-chips" id="filterChips">
-                <button class="action-chip chip-active" data-filter="all" onclick="setFilter('all', this)">All</button>
-                <button class="action-chip" data-filter="income" onclick="setFilter('income', this)">💸 Income</button>
-                <button class="action-chip" data-filter="expense" onclick="setFilter('expense', this)">☕ Expense</button>
-                <button class="action-chip" data-filter="lend" onclick="setFilter('lend', this)">🤝 Lent</button>
-                <button class="action-chip" data-filter="borrow" onclick="setFilter('borrow', this)">📨 Borrowed</button>
-                <button class="action-chip" data-filter="bd" onclick="setFilter('bd', this)">📥 Balance</button>
-            </div>
         </section>
 
         <!-- Daily Streak -->
@@ -421,14 +404,32 @@
             </div>
         </section>
 
+        <!-- Search bar -->
+        <section class="px-1">
+            <div class="search-bar">
+                <span style="color:var(--text3);font-size:14px">🔍</span>
+                <input type="text" id="searchInput" placeholder="Search logs, amounts, dates…" oninput="filterFeed(this.value)" style="color:var(--text)" />
+                <button id="searchClearBtn" onclick="clearSearch()" style="display:none;color:var(--text3);font-size:12px;padding:2px 6px;border-radius:99px;background:rgba(255,255,255,0.07);border:none">✕</button>
+            </div>
+        </section>
+
+        <!-- Filter chips -->
+        <section class="px-1">
+            <div class="action-chips" id="filterChips">
+                <button class="action-chip chip-active" data-filter="all" onclick="setFilter('all', this)">All</button>
+                <button class="action-chip" data-filter="income" onclick="setFilter('income', this)">💸 Income</button>
+                <button class="action-chip" data-filter="expense" onclick="setFilter('expense', this)">☕ Expense</button>
+                <button class="action-chip" data-filter="lend" onclick="setFilter('lend', this)">🤝 Lent</button>
+                <button class="action-chip" data-filter="borrow" onclick="setFilter('borrow', this)">📨 Borrowed</button>
+                <button class="action-chip" data-filter="bd" onclick="setFilter('bd', this)">📥 Balance</button>
+            </div>
+        </section>
+
         <!-- Activity Feed -->
         <section class="px-1 pb-4">
             <div class="flex justify-between items-center mb-3">
                 <span class="section-label">Activity</span>
-                <div class="flex items-center gap-2">
-                    <button onclick="exportLogs()" style="font-size:10px;font-weight:700;color:rgba(167,139,250,0.7);background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.25);border-radius:99px;padding:2px 9px">Export</button>
-                    <button onclick="clearAllDataPrompt()" style="font-size:10px;font-weight:700;color:rgba(239,68,68,0.5);background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15);border-radius:99px;padding:2px 9px">Reset</button>
-                </div>
+                <button onclick="clearAllDataPrompt()" style="font-size:10px;font-weight:700;color:rgba(239,68,68,0.5);background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15);border-radius:99px;padding:2px 9px">Reset</button>
             </div>
             <div id="activityFeedContainer" class="space-y-2"></div>
         </section>
@@ -549,6 +550,24 @@
         </div>
         <p class="text-[11px] leading-relaxed px-1" style="color:var(--text3)">Stored only on this device. Makes your greetings personal. ✨</p>
         <button onclick="saveProfileName()" class="shine-effect w-full py-4 rounded-xl font-bold text-sm tracking-wide shadow-lg btn-press" style="background:#fff;color:#1a0840">SAVE NAME</button>
+
+        <div style="height:1px;background:rgba(255,255,255,0.08);margin:6px 0 10px"></div>
+
+        <div>
+            <label class="sheet-input-label px-1">Data</label>
+            <div class="grid grid-cols-2 gap-3 mt-2">
+                <button onclick="exportLogs()" class="btn-press flex flex-col items-center justify-center gap-1.5 py-4 rounded-xl" style="background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.25)">
+                    <span style="font-size:18px">⬆️</span>
+                    <span style="font-size:11px;font-weight:700;color:#c4b5fd">Export</span>
+                </button>
+                <button onclick="document.getElementById('importFileInput').click()" class="btn-press flex flex-col items-center justify-center gap-1.5 py-4 rounded-xl" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12)">
+                    <span style="font-size:18px">⬇️</span>
+                    <span style="font-size:11px;font-weight:700;color:var(--text2)">Import</span>
+                </button>
+            </div>
+            <input type="file" id="importFileInput" accept="application/json" style="display:none" onchange="importLogs(event)">
+            <p class="text-[11px] leading-relaxed px-1 mt-2.5" style="color:var(--text3)">Export saves a backup file. Import restores from a previously exported file — this replaces your current data.</p>
+        </div>
     </div>
 </div>
 
@@ -655,7 +674,7 @@
     <div class="space-y-4">
         <div class="sheet-input-wrap text-center" style="padding:20px">
             <div class="text-3xl mb-2">💛</div>
-            <p class="text-sm font-medium leading-relaxed" style="color:var(--text2)">If it helps you manage your finances, consider supporting its development.</p>
+            <p class="text-sm font-medium leading-relaxed" style="color:var(--text2)">Kash is completely free. If it helps you stay on top of your finances, consider buying me a coffee.</p>
         </div>
         <div class="grid grid-cols-2 gap-3">
             <button onclick="triggerHaptic('success'); navigator.clipboard.writeText('01301292335').then(() => showToast('📋 bKash number copied!'))" class="shine-effect flex flex-col items-center justify-center gap-2 py-4 rounded-xl btn-press" style="background:rgba(236,72,153,0.1);border:1px solid rgba(236,72,153,0.25)">
@@ -1065,7 +1084,7 @@ function renderLogItem(log, container) {
 
     const deleteBg = document.createElement('div');
     deleteBg.className = 'feed-item-delete-bg';
-    deleteBg.innerHTML = '🗑️';
+    deleteBg.innerHTML = `<button class="swipe-delete-btn" onclick="deleteLog(${log.id})">✕</button>`;
 
     const inner = document.createElement('div');
     inner.className = 'feed-item-inner activity-card btn-press';
@@ -1091,7 +1110,6 @@ function renderLogItem(log, container) {
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0">
             <span style="font-size:15px;font-weight:800;color:${color};letter-spacing:-0.02em" class="ticker-num">${prefix}${formatBDT(log.amount)}</span>
-            <button onclick="deleteLog(${log.id})" style="width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:center;font-size:9px;color:rgba(255,255,255,0.3)" class="btn-press">✕</button>
         </div>
     `;
 
@@ -1217,17 +1235,42 @@ function updatePendingDot() {
 // ==================== EXPORT ====================
 function exportLogs() {
     if (appState.logs.length === 0) { showToast('⚠️ No entries to export'); return; }
-    const lines = [`Kash Export — ${new Date().toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'})}`, '─'.repeat(40)];
-    appState.logs.forEach(l => {
-        const prefix = {bd:'[B/D]',income:'[+IN]',expense:'[-OUT]',lend:'[LENT]',borrow:'[BORROW]'}[l.type]||'[?]';
-        lines.push(`${prefix} ${l.date} | ৳${Number(l.amount).toLocaleString()} | ${l.note} | ${l.wallet}`);
-    });
-    const grand = Object.values(appState.wallets).reduce((a,b)=>a+b,0);
-    lines.push('─'.repeat(40)); lines.push(`Total assets: ৳${grand.toLocaleString()}`);
-    const text = lines.join('\n');
-    navigator.clipboard.writeText(text).then(() => showToast('📋 Ledger copied to clipboard!')).catch(() => {
-        const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); showToast('📋 Copied!');
-    });
+    const payload = { app: 'kash', version: 6, exportedAt: new Date().toISOString(), state: appState };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const stamp = new Date().toISOString().slice(0,10);
+    a.href = url; a.download = `kash-backup-${stamp}.json`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('⬆️ Backup exported');
+}
+
+// ==================== IMPORT ====================
+function importLogs(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        try {
+            const parsed = JSON.parse(e.target.result);
+            const incoming = parsed.state || parsed;
+            if (!incoming || !Array.isArray(incoming.logs)) throw new Error('bad format');
+            if (!confirm('Import this backup? This will replace your current data.')) return;
+            appState = { ...appState, ...incoming };
+            saveState();
+            calculateMetrics(); renderActivityFeed(); renderLedger(); renderAllWallets();
+            renderMonthlyStats(); renderStreaks(); renderWeeklyChart(); updatePendingDot();
+            loadBudgetInputs(); renderGreeting();
+            showToast('⬇️ Backup imported');
+            closeSheet('profileSheet');
+        } catch (err) {
+            showToast('⚠️ Invalid backup file');
+        } finally {
+            event.target.value = '';
+        }
+    };
+    reader.readAsText(file);
 }
 
 // ==================== RESET ====================
