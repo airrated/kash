@@ -404,9 +404,28 @@ body.light-mode .top-icon-btn {
 
         /* Notification dot */
         .notif-dot { width: 7px; height: 7px; border-radius: 50%; background: #f87171; position: absolute; top: 6px; right: 6px; border: 1.5px solid var(--bg); }
+
+        /* Standalone / Add-to-Home adjustments (iOS PWA) */
+        @media (display-mode: standalone) {
+            body { padding-bottom: max(8px, env(safe-area-inset-bottom)); }
+            main#mainScroll { padding-bottom: calc(48px + env(safe-area-inset-bottom)) !important; }
+            .fab { bottom: calc(12px + env(safe-area-inset-bottom)) !important; }
+        }
+        /* Fallback for iOS Safari standalone (navigator.standalone) */
+        body.standalone-ios main#mainScroll { padding-bottom: calc(48px + env(safe-area-inset-bottom)) !important; }
+        body.standalone-ios .fab { bottom: calc(12px + env(safe-area-inset-bottom)) !important; }
     </style>
 </head>
 <body class="text-white grid-pattern relative flex flex-col justify-between select-none">
+    <script>
+        (function(){
+            const isStandalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone || false;
+            if (isStandalone) document.body.classList.add('standalone-ios');
+            try {
+                if (window.matchMedia) window.matchMedia('(display-mode: standalone)').addEventListener('change', e => { if (e.matches) document.body.classList.add('standalone-ios'); else document.body.classList.remove('standalone-ios'); });
+            } catch(e){}
+        })();
+    </script>
 
 <div class="ambient-orb"></div>
 <div class="ambient-orb-2"></div>
