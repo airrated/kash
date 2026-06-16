@@ -415,6 +415,13 @@ body.light-mode .top-icon-btn {
         /* Fallback for iOS Safari standalone (navigator.standalone) */
         body.standalone-ios main#mainScroll { padding-bottom: var(--main-bottom-padding) !important; }
         body.standalone-ios .fab { bottom: var(--fab-bottom-offset) !important; }
+        /* Stronger overrides for stubborn iOS A2HS cases (only when detected) */
+        body.standalone-ios { min-height: 100vh !important; height: 100vh !important; }
+        body.standalone-ios main#mainScroll { padding-bottom: 36px !important; }
+        body.standalone-ios .fab { bottom: 12px !important; }
+        /* Debug badge shown only in standalone to help debugging layout */
+        #standalone-debug { position: fixed; left: 10px; bottom: 10px; z-index:9999; background: rgba(0,0,0,0.6); color: #fff; font-size:11px; padding:6px 8px; border-radius:8px; backdrop-filter: blur(6px); display:none }
+        body.standalone-ios #standalone-debug { display:block }
     </style>
 </head>
 <body class="text-white grid-pattern relative flex flex-col justify-between select-none">
@@ -429,10 +436,24 @@ body.light-mode .top-icon-btn {
                 const gap = Math.max(0, Math.round((screen.height || window.outerHeight) - (window.innerHeight || document.documentElement.clientHeight)));
                 const baseMain = 48; // default main bottom padding
                 const baseFab = 12;  // default fab offset
-                const mainVal = Math.max(12, baseMain - gap);
-                const fabVal = Math.max(8, baseFab - Math.round(gap / 2));
+                // If gap is small, use defaults. If gap is large, fall back to stronger fixed values.
+                let mainVal, fabVal;
+                if (gap <= 8) {
+                    mainVal = baseMain;
+                    fabVal = baseFab;
+                } else if (gap <= 40) {
+                    mainVal = Math.max(20, baseMain - Math.round(gap/1.2));
+                    fabVal = Math.max(10, baseFab - Math.round(gap/4));
+                } else {
+                    // stubborn case: use compact values so content isn't pushed up by phantom bar
+                    mainVal = 36;
+                    fabVal = 12;
+                }
                 document.documentElement.style.setProperty('--main-bottom-padding', mainVal + 'px');
                 document.documentElement.style.setProperty('--fab-bottom-offset', fabVal + 'px');
+                // update debug badge if present
+                const dbg = document.getElementById('standalone-debug');
+                if (dbg) dbg.innerText = `gap:${gap}px inner:${window.innerHeight}px screen:${screen.height || 0}px main:${mainVal}px fab:${fabVal}px`;
             }
 
             try {
@@ -453,6 +474,7 @@ body.light-mode .top-icon-btn {
     </script>
 
 <div class="ambient-orb"></div>
+<div id="standalone-debug" aria-hidden="true"></div>
 <div class="ambient-orb-2"></div>
 <div class="ambient-orb-3"></div>
 <div class="ambient-orb-4"></div>
