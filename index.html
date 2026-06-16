@@ -6,7 +6,7 @@
     <title>Kash</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="https://i.postimg.cc/m2LrcMTy/Kash-Logo.png">
+    <link rel="apple-touch-icon" href="https://i.postimg.cc/m2LrcMTy/Kash-Logo.pn">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -35,16 +35,30 @@
             --text3: rgba(255,255,255,0.3);
             --purple: #7c3aed;
             --purple-light: #a78bfa;
+            --accent: #7c3aed;
+            --accent-light: #a78bfa;
+            --accent-text: #c4b5fd;
+            --accent-soft: rgba(124,58,237,0.15);
+            --accent-soft-border: rgba(124,58,237,0.25);
+            --accent-glow: rgba(160,100,255,0.5);
+            --wallet-tint: #30304a;
         }
         body.light-mode {
-            --bg: #f0eeff;
-            --bg2: #e8e4ff;
-            --glass: rgba(255,255,255,0.55);
-            --glass-border: rgba(120,80,240,0.18);
-            --glass-hi: rgba(255,255,255,0.8);
-            --text: #1a0840;
-            --text2: rgba(26,8,64,0.55);
-            --text3: rgba(26,8,64,0.35);
+            --bg: #f5f5f5;
+            --bg2: #ededed;
+            --glass: rgba(0,0,0,0.04);
+            --glass-border: rgba(0,0,0,0.12);
+            --glass-hi: rgba(255,255,255,0.7);
+            --text: #0a0a0a;
+            --text2: rgba(10,10,10,0.55);
+            --text3: rgba(10,10,10,0.35);
+            --accent: #fa8072;
+            --accent-light: #fa8072;
+            --accent-text: #e2675a;
+            --accent-soft: rgba(250,128,114,0.14);
+            --accent-soft-border: rgba(250,128,114,0.35);
+            --accent-glow: rgba(250,128,114,0.45);
+            --wallet-tint: #ffffff;
         }
 
         body {
@@ -62,8 +76,8 @@
         }
         body.light-mode {
             background-image:
-                radial-gradient(ellipse 90% 65% at 50% -5%, rgba(140,80,255,0.25) 0%, transparent 65%),
-                radial-gradient(ellipse 60% 40% at 85% 85%, rgba(100,60,200,0.1) 0%, transparent 60%);
+                radial-gradient(ellipse 90% 65% at 50% -5%, rgba(250,128,114,0.10) 0%, transparent 65%),
+                radial-gradient(ellipse 60% 40% at 85% 85%, rgba(0,0,0,0.04) 0%, transparent 60%);
         }
 
         .premium-glass {
@@ -78,7 +92,7 @@
             background-size: 26px 26px;
         }
         body.light-mode .grid-pattern {
-            background-image: radial-gradient(rgba(100,60,200,0.06) 1px, transparent 1px);
+            background-image: radial-gradient(rgba(10,10,10,0.05) 1px, transparent 1px);
         }
         .ambient-orb {
             position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
@@ -91,6 +105,12 @@
             width: 320px; height: 320px;
             background: radial-gradient(circle, rgba(70,30,160,0.22) 0%, transparent 70%);
             filter: blur(55px); z-index: 0; pointer-events: none;
+        }
+        body.light-mode .ambient-orb {
+            background: radial-gradient(circle, rgba(250,128,114,0.22) 0%, rgba(0,0,0,0.04) 45%, transparent 72%);
+        }
+        body.light-mode .ambient-orb-2 {
+            background: radial-gradient(circle, rgba(0,0,0,0.05) 0%, transparent 70%);
         }
 
         /* Typography */
@@ -110,7 +130,7 @@
             color: var(--text); font-size: 13.5px; font-weight: 400; flex: 1;
         }
         .search-bar input::placeholder { color: var(--text3); }
-        .search-bar:focus-within { border-color: rgba(160,100,255,0.5); box-shadow: 0 0 0 3px rgba(120,60,255,0.12), inset 0 1px 0 var(--glass-hi); }
+        .search-bar:focus-within { border-color: var(--accent-light); box-shadow: 0 0 0 3px var(--accent-soft), inset 0 1px 0 var(--glass-hi); }
 
         /* Filter chips */
         .action-chips { display: flex; gap: 7px; overflow-x: auto; padding-bottom: 2px; }
@@ -123,7 +143,7 @@
             white-space: nowrap; flex-shrink: 0; cursor: pointer; transition: all 0.15s;
         }
         .action-chip:active { opacity: 0.7; transform: scale(0.97); }
-        .action-chip.chip-active { background: rgba(124,58,237,0.2); border-color: rgba(167,139,250,0.5); color: #c4b5fd; }
+        .action-chip.chip-active { background: var(--accent-soft); border-color: var(--accent-soft-border); color: var(--accent-text); }
 
         /* Cards */
         .activity-card {
@@ -142,20 +162,20 @@
         .activity-card-glow { position: absolute; bottom: -55px; right: -55px; width: 110px; height: 110px; border-radius: 50%; filter: blur(28px); pointer-events: none; }
         .wallet-card { overflow: visible; }
         .wallet-card .activity-card-glow { z-index: -1; }
-        .card-glow-bank  { background: rgba(52,199,89,0.28); }
-        .card-glow-cash  { background: rgba(245,158,11,0.28); }
-        .card-glow-bkash { background: rgba(236,72,153,0.28); }
-        .card-glow-nagad { background: rgba(249,115,22,0.28); }
+        .card-glow-bank, .card-glow-cash, .card-glow-bkash, .card-glow-nagad { background: var(--wallet-tint); opacity: 0.55; }
 
         /* Active wallet glow rings */
-        .wallet-glow-bank  { border-color: rgba(52,199,89,0.55) !important; box-shadow: 0 0 24px rgba(52,199,89,0.15), inset 0 1px 0 var(--glass-hi) !important; }
-        .wallet-glow-cash  { border-color: rgba(245,158,11,0.55) !important; box-shadow: 0 0 24px rgba(245,158,11,0.15), inset 0 1px 0 var(--glass-hi) !important; }
-        .wallet-glow-bkash { border-color: rgba(236,72,153,0.55) !important; box-shadow: 0 0 24px rgba(236,72,153,0.15), inset 0 1px 0 var(--glass-hi) !important; }
-        .wallet-glow-nagad { border-color: rgba(249,115,22,0.55) !important; box-shadow: 0 0 24px rgba(249,115,22,0.15), inset 0 1px 0 var(--glass-hi) !important; }
-        .wallet-glow-bank .card-value  { color: #4ade80 !important; }
-        .wallet-glow-cash .card-value  { color: #fbbf24 !important; }
-        .wallet-glow-bkash .card-value { color: #f472b6 !important; }
-        .wallet-glow-nagad .card-value { color: #fb923c !important; }
+        .wallet-glow-bank, .wallet-glow-cash, .wallet-glow-bkash, .wallet-glow-nagad {
+            border-color: var(--wallet-tint) !important;
+            box-shadow: 0 0 24px var(--wallet-tint), inset 0 1px 0 var(--glass-hi) !important;
+        }
+        .wallet-glow-bank .card-value, .wallet-glow-cash .card-value, .wallet-glow-bkash .card-value, .wallet-glow-nagad .card-value {
+            color: var(--text) !important;
+        }
+        body.light-mode .wallet-glow-bank, body.light-mode .wallet-glow-cash, body.light-mode .wallet-glow-bkash, body.light-mode .wallet-glow-nagad {
+            border-color: rgba(10,10,10,0.5) !important;
+            box-shadow: 0 0 0 1px rgba(10,10,10,0.08), inset 0 1px 0 var(--glass-hi) !important;
+        }
 
         /* FAB */
         .fab {
@@ -164,10 +184,10 @@
             background: rgba(255,255,255,0.95); border: 1px solid rgba(255,255,255,0.6);
             display: flex; align-items: center; justify-content: center;
             font-size: 26px; font-weight: 300; color: #1a0835; line-height: 1;
-            box-shadow: 0 0 30px rgba(160,100,255,0.5), 0 8px 24px rgba(0,0,0,0.4);
+            box-shadow: 0 0 30px var(--accent-glow), 0 8px 24px rgba(0,0,0,0.4);
             cursor: pointer; transition: transform 0.15s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.15s;
         }
-        .fab:active { transform: translateX(-50%) scale(0.93); box-shadow: 0 0 20px rgba(160,100,255,0.35), 0 4px 14px rgba(0,0,0,0.35); }
+        .fab:active { transform: translateX(-50%) scale(0.93); box-shadow: 0 0 20px var(--accent-glow), 0 4px 14px rgba(0,0,0,0.35); }
 
         /* Shine effect */
         .shine-effect { position: relative; overflow: hidden; }
@@ -184,8 +204,8 @@
             border-top: 1px solid rgba(255,255,255,0.16) !important;
         }
         body.light-mode .bottom-sheet {
-            background: rgba(240,235,255,0.97) !important;
-            border-top: 1px solid rgba(120,80,240,0.2) !important;
+            background: rgba(255,255,255,0.97) !important;
+            border-top: 1px solid rgba(10,10,10,0.12) !important;
         }
         .bottom-sheet.open { transform: translateY(0); }
 
@@ -201,9 +221,9 @@
 
         /* Sheet form inputs */
         .sheet-input-wrap { background: rgba(255,255,255,0.05); border-radius: 14px; border: 1px solid rgba(255,255,255,0.07); padding: 12px 14px; }
-        body.light-mode .sheet-input-wrap { background: rgba(120,80,240,0.06); border: 1px solid rgba(120,80,240,0.15); }
+        body.light-mode .sheet-input-wrap { background: rgba(10,10,10,0.04); border: 1px solid rgba(10,10,10,0.1); }
         .sheet-input-label { display: block; font-size: 9px; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; margin-bottom: 4px; }
-        body.light-mode .sheet-input-label { color: rgba(80,40,180,0.55); }
+        body.light-mode .sheet-input-label { color: rgba(10,10,10,0.5); }
         .sheet-input { background: transparent; width: 100%; color: var(--text); outline: none; }
 
         /* Progress bar */
@@ -211,12 +231,12 @@
         .progress-fill { height: 100%; border-radius: 999px; transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1); }
 
         /* Log feed swipe-to-delete container */
-        .feed-item-wrapper { position: relative; overflow: hidden; border-radius: 18px; }
-        .feed-item-delete-bg { position: absolute; right: 0; top: 0; bottom: 0; width: 80px; display: flex; align-items: center; justify-content: center; }
-        .feed-item-delete-bg .swipe-delete-btn { width: 34px; height: 34px; border-radius: 50%; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.25); display: flex; align-items: center; justify-content: center; color: #f87171; font-size: 13px; transition: transform 0.15s; }
-        .feed-item-delete-bg .swipe-delete-btn:active { transform: scale(0.9); }
+        .feed-item-wrapper { position: relative; overflow: hidden; border-radius: 18px; max-height: 500px; }
+        .feed-item-delete-bg { position: absolute; inset: 0; background: #ef4444; border-radius: 18px; display: flex; align-items: center; justify-content: flex-end; padding-right: 28px; opacity: 0; transition: opacity 0.15s ease; }
+        .feed-item-delete-bg span { color: #ffffff; font-size: 20px; font-weight: 800; }
         .feed-item-inner { position: relative; transition: transform 0.2s ease; border-radius: 18px; }
-        .feed-item-inner.swiped { transform: translateX(-80px); }
+        .feed-item-inner.removing { transition: transform 0.18s ease; transform: translateX(-100%) !important; }
+        .feed-item-wrapper.removing { transition: max-height 0.2s ease 0.05s, margin 0.2s ease 0.05s; }
 
         /* Net bar chart */
         .bar-positive { background: linear-gradient(to top, rgba(52,199,89,0.3), rgba(52,199,89,0.7)); border-radius: 4px 4px 0 0; }
@@ -225,10 +245,11 @@
         /* Tab nav */
         .tab-nav { display: flex; gap: 0; background: rgba(255,255,255,0.05); border-radius: 14px; padding: 3px; border: 1px solid rgba(255,255,255,0.08); }
         .tab-btn { flex: 1; text-align: center; padding: 8px 0; font-size: 11px; font-weight: 700; border-radius: 11px; color: var(--text2); transition: all 0.2s; letter-spacing: 0.02em; }
-        .tab-btn.active { background: rgba(124,58,237,0.35); color: #c4b5fd; box-shadow: 0 2px 8px rgba(124,58,237,0.2); }
+        .tab-btn.active { background: var(--accent-soft); color: var(--accent-text); box-shadow: 0 2px 8px var(--accent-soft); }
+        body.light-mode .tab-btn.active { background: var(--accent); color: #fff; }
 
         /* Streak */
-        @keyframes streakPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(124,58,237,0.4); } 50% { box-shadow: 0 0 0 5px rgba(124,58,237,0); } }
+        @keyframes streakPulse { 0%,100% { box-shadow: 0 0 0 0 var(--accent-soft-border); } 50% { box-shadow: 0 0 0 5px rgba(124,58,237,0); } }
 
         /* Lend/borrow status badge */
         .status-badge { font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 99px; display: inline-block; }
@@ -323,7 +344,7 @@
                 <span class="section-label">Wallets</span>
                 <div class="flex items-center gap-2">
                     <span class="text-[11px] font-semibold ticker-num" style="color:var(--text3)" id="combinedAssetsTotal">Total: ৳ 0</span>
-                    <button onclick="openSheet('budgetSheet')" style="font-size:10px;font-weight:700;color:rgba(167,139,250,0.7);background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.25);border-radius:99px;padding:2px 9px">Budget</button>
+                    <button onclick="openSheet('budgetSheet')" style="font-size:10px;font-weight:700;color:var(--accent-text);background:var(--accent-soft);border:1px solid var(--accent-soft-border);border-radius:99px;padding:2px 9px">Budget</button>
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-3">
@@ -401,6 +422,14 @@
                     <div style="font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em">income – expenses</div>
                     <div class="activity-card-glow" id="netGlow" style="background:rgba(52,199,89,0.2)"></div>
                 </div>
+            </div>
+        </section>
+
+        <!-- Spend vs Cash-in heads-up -->
+        <section class="px-1" id="spendWarningSection" style="display:none">
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:16px;background:var(--accent-soft);border:1px solid var(--accent-soft-border)">
+                <span style="font-size:15px;line-height:1.3">⚠️</span>
+                <span id="spendWarningText" style="font-size:12px;font-weight:600;color:var(--accent-text);line-height:1.4"></span>
             </div>
         </section>
 
@@ -556,9 +585,9 @@
         <div>
             <label class="sheet-input-label px-1">Data</label>
             <div class="grid grid-cols-2 gap-3 mt-2">
-                <button onclick="exportLogs()" class="btn-press flex flex-col items-center justify-center gap-1.5 py-4 rounded-xl" style="background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.25)">
+                <button onclick="exportLogs()" class="btn-press flex flex-col items-center justify-center gap-1.5 py-4 rounded-xl" style="background:var(--accent-soft);border:1px solid var(--accent-soft-border)">
                     <span style="font-size:18px">⬆️</span>
-                    <span style="font-size:11px;font-weight:700;color:#c4b5fd">Export</span>
+                    <span style="font-size:11px;font-weight:700;color:var(--accent-text)">Export</span>
                 </button>
                 <button onclick="document.getElementById('importFileInput').click()" class="btn-press flex flex-col items-center justify-center gap-1.5 py-4 rounded-xl" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12)">
                     <span style="font-size:18px">⬇️</span>
@@ -956,6 +985,18 @@ function renderMonthlyStats() {
     netEl.textContent = (net >= 0 ? '+' : '') + formatBDT(net);
     netEl.style.color = net >= 0 ? '#4ade80' : '#f87171';
     document.getElementById('netGlow').style.background = net >= 0 ? 'rgba(52,199,89,0.2)' : 'rgba(248,113,113,0.2)';
+
+    // Spend vs Cash-in heads-up
+    const warnSection = document.getElementById('spendWarningSection');
+    const warnText = document.getElementById('spendWarningText');
+    if (income > 0 && spent >= income * 0.5) {
+        const pct = Math.round((spent / income) * 100);
+        warnSection.style.display = '';
+        if (pct >= 100) warnText.textContent = `You've spent ${pct}% of your Cash In this month — you're past it.`;
+        else warnText.textContent = `Heads up — you're already ${pct}% through your Cash In this month.`;
+    } else {
+        warnSection.style.display = 'none';
+    }
 }
 
 // ==================== WEEKLY CHART ====================
@@ -1023,6 +1064,9 @@ function renderStreaks() {
     const badges = document.getElementById('streakBadges');
     if (!badges) return;
     badges.innerHTML = '';
+    const accent = getComputedStyle(document.body).getPropertyValue('--accent').trim() || '#7c3aed';
+    const accentSoft = getComputedStyle(document.body).getPropertyValue('--accent-soft').trim() || 'rgba(124,58,237,0.12)';
+    const accentSoftBorder = getComputedStyle(document.body).getPropertyValue('--accent-soft-border').trim() || 'rgba(167,139,250,0.4)';
     const loggedDates = new Set(appState.logs.map(l => l.timestamp ? new Date(l.timestamp).toDateString() : null).filter(Boolean));
     const today = new Date();
     const monday = new Date(today); monday.setDate(today.getDate() - ((today.getDay()+6)%7));
@@ -1036,15 +1080,15 @@ function renderStreaks() {
         const badge = document.createElement('div');
         badge.style.cssText = 'width:100%;aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;transition:all 0.2s;';
         if (hasLog) {
-            badge.style.background = 'linear-gradient(135deg,#7c3aed,#9d4edd)';
-            badge.style.border = '1.5px solid rgba(167,139,250,0.6)';
-            badge.style.boxShadow = '0 0 12px rgba(124,58,237,0.45)';
+            badge.style.background = accent;
+            badge.style.border = `1.5px solid ${accentSoftBorder}`;
+            badge.style.boxShadow = `0 0 12px ${accentSoft}`;
             badge.innerHTML = `<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6L5 8.5L9.5 3.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
         } else if (isToday) {
-            badge.style.background = 'rgba(124,58,237,0.12)';
-            badge.style.border = '1.5px solid rgba(167,139,250,0.4)';
+            badge.style.background = accentSoft;
+            badge.style.border = `1.5px solid ${accentSoftBorder}`;
             badge.style.animation = 'streakPulse 2s infinite';
-            badge.innerHTML = `<div style="width:6px;height:6px;border-radius:50%;background:rgba(167,139,250,0.5)"></div>`;
+            badge.innerHTML = `<div style="width:6px;height:6px;border-radius:50%;background:${accentSoftBorder}"></div>`;
         } else {
             badge.style.background = 'rgba(255,255,255,0.04)';
             badge.style.border = '1.5px solid rgba(255,255,255,0.08)';
@@ -1084,7 +1128,7 @@ function renderLogItem(log, container) {
 
     const deleteBg = document.createElement('div');
     deleteBg.className = 'feed-item-delete-bg';
-    deleteBg.innerHTML = `<button class="swipe-delete-btn" onclick="deleteLog(${log.id})">✕</button>`;
+    deleteBg.innerHTML = `<span>✕</span>`;
 
     const inner = document.createElement('div');
     inner.className = 'feed-item-inner activity-card btn-press';
@@ -1113,20 +1157,38 @@ function renderLogItem(log, container) {
         </div>
     `;
 
-    // Swipe to delete
-    let startX = null, isDragging = false;
-    inner.addEventListener('touchstart', e => { startX = e.touches[0].clientX; isDragging = false; }, { passive: true });
+    // Swipe to delete — full swipe auto-deletes, no tap required
+    let startX = null, isDragging = false, wrapWidth = 0;
+    inner.addEventListener('touchstart', e => {
+        startX = e.touches[0].clientX; isDragging = false;
+        wrapWidth = wrapper.offsetWidth;
+    }, { passive: true });
     inner.addEventListener('touchmove', e => {
         if (startX === null) return;
         const dx = e.touches[0].clientX - startX;
         if (!isDragging && Math.abs(dx) > 8) isDragging = true;
-        if (isDragging && dx < 0) inner.style.transform = `translateX(${Math.max(dx,-80)}px)`;
+        if (isDragging && dx < 0) {
+            const clamped = Math.max(dx, -wrapWidth);
+            inner.style.transform = `translateX(${clamped}px)`;
+            deleteBg.style.opacity = Math.min(1, Math.abs(clamped) / (wrapWidth * 0.55));
+        }
     }, { passive: true });
     inner.addEventListener('touchend', e => {
         if (!isDragging) { startX = null; return; }
         const dx = e.changedTouches[0].clientX - startX;
-        if (dx < -50) { inner.style.transform = 'translateX(-80px)'; inner.classList.add('swiped'); }
-        else { inner.style.transform = ''; inner.classList.remove('swiped'); }
+        if (dx < -wrapWidth * 0.45) {
+            inner.classList.add('removing');
+            wrapper.classList.add('removing');
+            wrapper.style.maxHeight = wrapper.offsetHeight + 'px';
+            requestAnimationFrame(() => {
+                wrapper.style.maxHeight = '0px';
+                wrapper.style.marginBottom = '0px';
+            });
+            setTimeout(() => deleteLog(log.id), 220);
+        } else {
+            inner.style.transform = '';
+            deleteBg.style.opacity = 0;
+        }
         startX = null; isDragging = false;
     });
 
