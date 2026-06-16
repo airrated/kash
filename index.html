@@ -200,7 +200,11 @@ body.light-mode .top-icon-btn {
             font-size: 12px; font-weight: 600; color: var(--text2);
             white-space: nowrap; flex-shrink: 0; cursor: pointer; transition: all 0.15s;
         }
-        .action-chip:not(.chip-active) { filter: blur(0.3px); opacity: 0.72; }
+        .action-chip:not(.chip-active) { filter: blur(0.45px); opacity: 0.72; }
+        .action-chip.dist-1 { filter: blur(0.18px); opacity: 0.9; }
+        .action-chip.dist-2 { filter: blur(0.35px); opacity: 0.68; }
+        .action-chip.dist-3 { filter: blur(0.6px); opacity: 0.58; }
+        .action-chip.dist-0 { filter: none; opacity: 1; }
         .action-chip:active { opacity: 0.7; transform: scale(0.97); }
         .action-chip.chip-active { background: rgba(124,58,237,0.2); border-color: rgba(167,139,250,0.5); color: #c4b5fd; filter: none; opacity: 1; }
 
@@ -255,7 +259,7 @@ body.light-mode .top-icon-btn {
 
         /* FAB */
         .fab {
-            position: fixed; bottom: calc(30px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%);
+            position: fixed; bottom: calc(22px + env(safe-area-inset-bottom)) !important; left: 50%; transform: translateX(-50%);
             z-index: 30; width: 58px; height: 58px; border-radius: 50%;
             background: rgba(255,255,255,0.95); border: 1px solid rgba(255,255,255,0.6);
             display: flex; align-items: center; justify-content: center;
@@ -331,7 +335,7 @@ body.light-mode .top-icon-btn {
         .weekly-bar-col { display: flex; flex-direction: column; align-items: stretch; justify-content: flex-end; gap: 2px; height: 100%; min-width: 0; }
         .weekly-bar-stack { display: flex; align-items: flex-end; gap: 4px; width: 100%; justify-content: center; min-height: 0; }
         .weekly-bar { flex: none; width: 10px; border-radius: 10px 10px 0 0; transition: height 0.4s ease; min-height: 0; box-shadow: 0 0 20px rgba(255,255,255,0.16), inset 0 0 12px rgba(255,255,255,0.12); }
-        .weekly-labels { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-top: 6px; }
+        .weekly-labels { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-top: 12px; }
         .weekly-labels div { filter: blur(0.25px); opacity: 0.88; }
 
         /* Wallet history */
@@ -417,10 +421,10 @@ body.light-mode .top-icon-btn {
         body.standalone-ios .fab { bottom: calc(var(--fab-bottom-offset) + 12px) !important; }
         /* Stronger overrides for stubborn iOS A2HS cases (only when detected) */
         :root { --phantom-gap: 0px; }
-        /* Keep body at viewport height to avoid nested flex sizing issues; apply phantom gap to main scroll padding instead */
+        /* Keep body at viewport height to avoid nested flex sizing issues; do NOT add extra phantom gap to layout */
         body.standalone-ios { min-height: 100vh !important; height: 100vh !important; }
-        body.standalone-ios main#mainScroll { padding-bottom: calc(var(--main-bottom-padding) + var(--phantom-gap)) !important; }
-        body.standalone-ios .fab { bottom: calc(var(--fab-bottom-offset) + 12px - min(var(--phantom-gap), 16px)) !important; }
+        body.standalone-ios main#mainScroll { padding-bottom: var(--main-bottom-padding) !important; }
+        body.standalone-ios .fab { bottom: calc(22px + env(safe-area-inset-bottom)) !important; z-index: 60 !important; }
 
         /* Soft fade overlays at left/right edges of the chips row */
         .action-chips::before, .action-chips::after {
@@ -469,7 +473,7 @@ body.light-mode .top-icon-btn {
                 }
                 document.documentElement.style.setProperty('--main-bottom-padding', mainVal + 'px');
                 document.documentElement.style.setProperty('--fab-bottom-offset', fabVal + 'px');
-                document.documentElement.style.setProperty('--phantom-gap', gap + 'px');
+                // do not set phantom-gap to avoid reintroducing bottom bar
                 // debug removed
             }
 
@@ -485,8 +489,8 @@ body.light-mode .top-icon-btn {
             } catch(e){}
 
             window.addEventListener('load', () => { adjustStandaloneInsets(); initChipsFade(); });
-            window.addEventListener('resize', () => { adjustStandaloneInsets(); updateChipsFade(); });
-            window.addEventListener('orientationchange', () => { adjustStandaloneInsets(); updateChipsFade(); });
+            window.addEventListener('resize', () => { adjustStandaloneInsets(); updateChipsFade(); updateChipProximity(); });
+            window.addEventListener('orientationchange', () => { adjustStandaloneInsets(); updateChipsFade(); updateChipProximity(); });
 
             // Chips fade helpers
             function updateChipsFade(){
@@ -502,7 +506,7 @@ body.light-mode .top-icon-btn {
                 if (!chips) return;
                 chips.addEventListener('scroll', updateChipsFade, { passive:true });
                 // initial
-                setTimeout(updateChipsFade, 60);
+                setTimeout(() => { updateChipsFade(); updateChipProximity(); }, 60);
             }
         })();
     </script>
@@ -1742,7 +1746,21 @@ function setFilter(filter, btn) {
     activeFilter = filter;
     document.querySelectorAll('.action-chip').forEach(c => c.classList.remove('chip-active'));
     btn.classList.add('chip-active');
+    updateChipProximity();
     renderActivityFeed();
+}
+
+// Update chip proximity classes so nearby chips are less blurred
+function updateChipProximity(){
+    const chips = Array.from(document.querySelectorAll('#filterChips .action-chip'));
+    if (!chips.length) return;
+    let activeIndex = chips.findIndex(c => c.classList.contains('chip-active'));
+    if (activeIndex === -1) activeIndex = 0;
+    chips.forEach((c, i) => {
+        c.classList.remove('dist-0','dist-1','dist-2','dist-3');
+        const d = Math.min(3, Math.abs(i - activeIndex));
+        c.classList.add('dist-' + d);
+    });
 }
 
 function clearSearch() {
