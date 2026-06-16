@@ -268,6 +268,8 @@ body.light-mode .top-icon-btn {
             cursor: pointer; transition: transform 0.15s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.15s;
         }
         .fab:active { transform: translateX(-50%) scale(0.93); box-shadow: 0 0 20px rgba(160,100,255,0.35); }
+        .fab { transition: transform 0.15s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.15s, opacity 0.22s ease, filter 0.22s ease; }
+        .fab.fab-hidden { opacity: 0; filter: blur(6px) saturate(0.85); transform: translateX(-50%) scale(0.98); pointer-events: none; }
 
         /* Shine effect */
         .shine-effect { position: relative; overflow: hidden; }
@@ -488,9 +490,9 @@ body.light-mode .top-icon-btn {
                 }
             } catch(e){}
 
-            window.addEventListener('load', () => { adjustStandaloneInsets(); initChipsFade(); });
-            window.addEventListener('resize', () => { adjustStandaloneInsets(); updateChipsFade(); updateChipProximity(); });
-            window.addEventListener('orientationchange', () => { adjustStandaloneInsets(); updateChipsFade(); updateChipProximity(); });
+            window.addEventListener('load', () => { adjustStandaloneInsets(); initChipsFade(); updateFabVisibility(); updateChipProximity(); });
+            window.addEventListener('resize', () => { adjustStandaloneInsets(); updateChipsFade(); updateChipProximity(); updateFabVisibility(); });
+            window.addEventListener('orientationchange', () => { adjustStandaloneInsets(); updateChipsFade(); updateChipProximity(); updateFabVisibility(); });
 
             // Chips fade helpers
             function updateChipsFade(){
@@ -1076,19 +1078,30 @@ function applyTheme() {
 }
 
 // ==================== SHEETS ====================
+function updateFabVisibility(){
+    const fab = document.querySelector('.fab');
+    if (!fab) return;
+    const backdrop = document.getElementById('backdrop');
+    const anyOpen = document.querySelectorAll('.bottom-sheet.open, .modal-overlay.active').length > 0 || (backdrop && backdrop.classList.contains('visible'));
+    if (anyOpen) fab.classList.add('fab-hidden'); else fab.classList.remove('fab-hidden');
+}
+
 function openSheet(id) {
     document.querySelectorAll('.bottom-sheet').forEach(s => { if (s.id !== id) s.classList.remove('open'); });
     document.getElementById(id).classList.add('open');
     document.getElementById('backdrop').classList.add('visible');
     triggerHaptic('tick');
+    updateFabVisibility();
 }
 function closeSheet(id) {
     document.getElementById(id).classList.remove('open');
     document.getElementById('backdrop').classList.remove('visible');
+    updateFabVisibility();
 }
 function closeAllSheets() {
     document.querySelectorAll('.bottom-sheet').forEach(s => s.classList.remove('open'));
     document.getElementById('backdrop').classList.remove('visible');
+    updateFabVisibility();
 }
 
 // ==================== FORMAT ====================
