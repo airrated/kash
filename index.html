@@ -237,6 +237,7 @@
 
         html {
             height: 100%;
+            scroll-behavior: smooth;
         }
 
         body {
@@ -253,7 +254,7 @@
             height: 100%;
             min-height: 100dvh;
             color: var(--text);
-            transition: background-color 0.3s;
+            transition: background-color 0.5s ease;
             padding: max(8px, calc(env(safe-area-inset-top) - 8px)) env(safe-area-inset-right) max(16px, env(safe-area-inset-bottom)) env(safe-area-inset-left);
             position: relative;
         }
@@ -272,10 +273,10 @@
             height: 100%;
             z-index: 0;
             pointer-events: none;
-            opacity: 0.6;
+            opacity: 0.18;
         }
         body.light-mode #particles-canvas {
-            opacity: 0.3;
+            opacity: 0.1;
         }
 
         .premium-glass {
@@ -695,7 +696,7 @@
             line-height: 1;
             box-shadow: 0 0 30px rgba(160, 100, 255, 0.5), 0 4px 20px rgba(0, 0, 0, 0.2);
             cursor: pointer;
-            transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease, filter 0.4s ease;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease, filter 0.5s ease;
             will-change: transform;
         }
         .fab:active {
@@ -749,7 +750,7 @@
         /* ─── BOTTOM SHEETS ─── */
         .bottom-sheet {
             transform: translateY(105%);
-            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+            transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
             background: rgba(12, 8, 26, 0.94) !important;
             backdrop-filter: blur(32px) saturate(180%) !important;
             -webkit-backdrop-filter: blur(32px) saturate(180%) !important;
@@ -1102,7 +1103,7 @@
             background: rgba(12, 8, 26, 0.6);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease, background 0.3s ease;
+            transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease, background 0.4s ease;
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             will-change: transform, opacity;
         }
@@ -1761,7 +1762,7 @@
     <div class="relative z-10 w-full max-w-md mx-auto flex flex-col h-full min-h-0 overflow-hidden">
 
         <!-- ─── MAIN SCROLL ─── -->
-        <main class="flex-grow overflow-y-auto custom-scroll px-4 space-y-5 pb-44" id="mainScroll" style="padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right));padding-bottom:calc(72px + env(safe-area-inset-bottom));overflow-x:clip">
+        <main class="flex-grow overflow-y-auto custom-scroll px-4 space-y-5 pb-44" id="mainScroll" style="padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right));padding-bottom:calc(72px + env(safe-area-inset-bottom));overflow-x:clip;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;overscroll-behavior-y:contain;will-change:scroll-position">
             <div class="top-inline shrink-0" id="topBar">
                 <button onclick="triggerHaptic('tick'); openSheet('aboutSheet')" class="flex items-center gap-2 btn-press">
                     <div class="w-7 h-7 shrink-0 icon icon-white">
@@ -1771,7 +1772,6 @@
                     <span class="top-bar-badge">1.9</span>
                 </button>
                 <div class="flex items-center gap-1.5">
-                    <button onclick="triggerHaptic('tick'); toggleTheme()" class="top-icon-btn btn-press" id="themeBtn" title="Toggle theme"><span class="icon icon-white" id="themeBtnIcon"></span></button>
                     <button onclick="triggerHaptic('tick'); openSheet('donateSheet')" class="top-icon-btn btn-press" title="Support Kash"><span style="font-size:16px;line-height:1">💛</span></button>
                     <button onclick="triggerHaptic('tick'); openSheet('profileSheet')" class="top-icon-btn btn-press" title="Profile"><span class="icon icon-white" id="profileBtnIcon"></span></button>
                     <button onclick="triggerHaptic('tick'); openSheet('lendLedgerSheet')" class="top-icon-btn btn-press relative" id="lendLedgerBtn" title="Lend & Borrow ledger"><span class="icon icon-white" id="lendLedgerBtnIcon"></span><span id="pendingDot" class="notif-dot hidden"></span></button>
@@ -1811,65 +1811,11 @@
                     <div class="flex items-center gap-2">
                         <span class="text-[11px] font-semibold ticker-num" style="color:var(--text3)" id="combinedAssetsTotal">Total: ৳ 0</span>
                         <button onclick="openSheet('budgetSheet')" style="font-size:10px;font-weight:700;color:rgba(167,139,250,0.7);background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.25);border-radius:99px;padding:2px 9px;transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1), background 0.2s ease, border-color 0.2s ease;cursor:pointer" class="btn-press">Budget</button>
+                        <button onclick="openAddBankSheet()" title="Add bank account" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:300;color:rgba(167,139,250,0.85);background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.28);cursor:pointer;transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1),background 0.2s ease;line-height:1" class="btn-press">+</button>
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-3" style="overflow:visible;padding-bottom:20px">
-                    <div onclick="openWalletSheet('bank')" id="walletCard-bank" class="wallet-card activity-card hover-lift">
-                        <div class="flex justify-between items-start">
-                            <div><div class="activity-card-label">Bank</div><div class="activity-card-sub">Balance</div></div>
-                            <span class="icon icon-lg icon-white wallet-icon" data-wallet="bank"></span>
-                        </div>
-                        <div class="mt-auto pt-2">
-                            <span class="activity-card-value card-value ticker-num" id="bal-bank">৳ 0</span>
-                            <div id="budget-bar-bank" style="display:none;margin-top:8px">
-                                <div class="progress-track"><div class="progress-fill" id="budget-fill-bank" style="background:linear-gradient(90deg,#4ade80,#22c55e);width:0%"></div></div>
-                                <div style="font-size:9px;font-weight:600;color:rgba(255,255,255,0.3);margin-top:3px" id="budget-label-bank"></div>
-                            </div>
-                        </div>
-                        <div class="activity-card-glow card-glow-bank"></div>
-                    </div>
-                    <div onclick="openWalletSheet('cash')" id="walletCard-cash" class="wallet-card activity-card hover-lift">
-                        <div class="flex justify-between items-start">
-                            <div><div class="activity-card-label">Cash</div><div class="activity-card-sub">On hand</div></div>
-                            <span class="icon icon-lg icon-white wallet-icon" data-wallet="cash"></span>
-                        </div>
-                        <div class="mt-auto pt-2">
-                            <span class="activity-card-value card-value ticker-num" id="bal-cash">৳ 0</span>
-                            <div id="budget-bar-cash" style="display:none;margin-top:8px">
-                                <div class="progress-track"><div class="progress-fill" id="budget-fill-cash" style="background:linear-gradient(90deg,#fbbf24,#f59e0b);width:0%"></div></div>
-                                <div style="font-size:9px;font-weight:600;color:rgba(255,255,255,0.3);margin-top:3px" id="budget-label-cash"></div>
-                            </div>
-                        </div>
-                        <div class="activity-card-glow card-glow-cash"></div>
-                    </div>
-                    <div onclick="openWalletSheet('bkash')" id="walletCard-bkash" class="wallet-card activity-card hover-lift">
-                        <div class="flex justify-between items-start">
-                            <div><div class="activity-card-label">bKash</div><div class="activity-card-sub">Mobile</div></div>
-                            <span class="icon icon-lg icon-white wallet-icon" data-wallet="bkash"></span>
-                        </div>
-                        <div class="mt-auto pt-2">
-                            <span class="activity-card-value card-value ticker-num" id="bal-bkash">৳ 0</span>
-                            <div id="budget-bar-bkash" style="display:none;margin-top:8px">
-                                <div class="progress-track"><div class="progress-fill" id="budget-fill-bkash" style="background:linear-gradient(90deg,#f472b6,#ec4899);width:0%"></div></div>
-                                <div style="font-size:9px;font-weight:600;color:rgba(255,255,255,0.3);margin-top:3px" id="budget-label-bkash"></div>
-                            </div>
-                        </div>
-                        <div class="activity-card-glow card-glow-bkash"></div>
-                    </div>
-                    <div onclick="openWalletSheet('nagad')" id="walletCard-nagad" class="wallet-card activity-card hover-lift">
-                        <div class="flex justify-between items-start">
-                            <div><div class="activity-card-label">Nagad</div><div class="activity-card-sub">Mobile</div></div>
-                            <span class="icon icon-lg icon-white wallet-icon" data-wallet="nagad"></span>
-                        </div>
-                        <div class="mt-auto pt-2">
-                            <span class="activity-card-value card-value ticker-num" id="bal-nagad">৳ 0</span>
-                            <div id="budget-bar-nagad" style="display:none;margin-top:8px">
-                                <div class="progress-track"><div class="progress-fill" id="budget-fill-nagad" style="background:linear-gradient(90deg,#fb923c,#f97316);width:0%"></div></div>
-                                <div style="font-size:9px;font-weight:600;color:rgba(255,255,255,0.3);margin-top:3px" id="budget-label-nagad"></div>
-                            </div>
-                        </div>
-                        <div class="activity-card-glow card-glow-nagad"></div>
-                    </div>
+                <div class="grid grid-cols-2 gap-3" id="walletGrid" style="overflow:visible;padding-bottom:20px">
+                    <!-- Wallet cards rendered dynamically by renderWalletGrid() -->
                 </div>
             </section>
 
@@ -1956,7 +1902,7 @@
 
     <!-- ============ LOG SHEET ============ -->
     <div id="logSheet" class="bottom-sheet frosted-sheet fixed bottom-0 left-0 right-0 z-40 rounded-t-[32px] p-6 max-w-md mx-auto" style="max-height:92vh;overflow-y:auto">
-        <div class="w-12 h-1 rounded-full mx-auto mb-5 cursor-pointer" style="background:rgba(255,255,255,0.1);transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);" onclick="closeSheet('logSheet')" class="btn-press"></div>
+        <div class="w-12 h-1 rounded-full mx-auto mb-5 cursor-pointer btn-press" style="background:rgba(255,255,255,0.1);transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);" onclick="closeSheet('logSheet')"></div>
         <div class="flex justify-between items-center mb-4">
             <h3 class="text-base font-semibold tracking-tight">Add New Log</h3>
             <button onclick="closeSheet('logSheet')" class="w-8 h-8 rounded-full flex items-center justify-center text-xs btn-press" style="background:rgba(255,255,255,0.05)">✕</button>
@@ -1979,10 +1925,7 @@
                 <div class="w-2/5 sheet-input-wrap">
                     <label class="sheet-input-label">Account</label>
                     <select id="logWallet" class="sheet-input font-semibold text-sm cursor-pointer appearance-none transition-transform duration-200" style="transition:transform 0.2s ease;">
-                        <option value="bank">Bank</option>
-                        <option value="cash">Cash</option>
-                        <option value="bkash">bKash</option>
-                        <option value="nagad">Nagad</option>
+                        <!-- Options populated dynamically by renderLogWalletOptions() -->
                     </select>
                 </div>
             </div>
@@ -2054,7 +1997,7 @@
 
     <!-- ============ PROFILE SHEET ============ -->
     <div id="profileSheet" class="bottom-sheet frosted-sheet fixed bottom-0 left-0 right-0 z-40 rounded-t-[32px] p-6 pb-10 max-w-md mx-auto">
-        <div class="w-12 h-1 rounded-full mx-auto mb-5 cursor-pointer" style="background:rgba(255,255,255,0.1);transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);" onclick="closeSheet('profileSheet')" class="btn-press"></div>
+        <div class="w-12 h-1 rounded-full mx-auto mb-5 cursor-pointer btn-press" style="background:rgba(255,255,255,0.1);transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);" onclick="closeSheet('profileSheet')"></div>
         <div class="flex justify-between items-center mb-6">
             <div>
                 <h3 class="text-base font-semibold tracking-tight">Your Profile</h3>
@@ -2085,7 +2028,7 @@
 
     <!-- ============ BUDGET SHEET ============ -->
     <div id="budgetSheet" class="bottom-sheet frosted-sheet fixed bottom-0 left-0 right-0 z-40 rounded-t-[32px] p-6 pb-10 max-w-md mx-auto" style="max-height:85vh;overflow-y:auto">
-        <div class="w-12 h-1 rounded-full mx-auto mb-5 cursor-pointer" style="background:rgba(255,255,255,0.1);transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);" onclick="closeSheet('budgetSheet')" class="btn-press"></div>
+        <div class="w-12 h-1 rounded-full mx-auto mb-5 cursor-pointer btn-press" style="background:rgba(255,255,255,0.1);transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);" onclick="closeSheet('budgetSheet')"></div>
         <div class="flex justify-between items-center mb-6">
             <div>
                 <h3 class="text-base font-semibold tracking-tight">Monthly Budgets</h3>
@@ -2094,22 +2037,6 @@
             <button onclick="closeSheet('budgetSheet')" class="w-8 h-8 rounded-full flex items-center justify-center text-xs btn-press" style="background:rgba(255,255,255,0.05)">✕</button>
         </div>
         <div class="space-y-4" id="budgetInputs">
-            <div class="sheet-input-wrap">
-                <label class="sheet-input-label flex items-center gap-2"><span class="icon icon-sm icon-white budget-icon" data-wallet="bank"></span> Bank — monthly spend limit (৳)</label>
-                <input type="number" id="budget-bank" placeholder="e.g. 20000" inputmode="decimal" class="sheet-input text-sm font-semibold">
-            </div>
-            <div class="sheet-input-wrap">
-                <label class="sheet-input-label flex items-center gap-2"><span class="icon icon-sm icon-white budget-icon" data-wallet="cash"></span> Cash — monthly spend limit (৳)</label>
-                <input type="number" id="budget-cash" placeholder="e.g. 5000" inputmode="decimal" class="sheet-input text-sm font-semibold">
-            </div>
-            <div class="sheet-input-wrap">
-                <label class="sheet-input-label flex items-center gap-2"><span class="icon icon-sm icon-white budget-icon" data-wallet="bkash"></span> bKash — monthly spend limit (৳)</label>
-                <input type="number" id="budget-bkash" placeholder="e.g. 3000" inputmode="decimal" class="sheet-input text-sm font-semibold">
-            </div>
-            <div class="sheet-input-wrap">
-                <label class="sheet-input-label flex items-center gap-2"><span class="icon icon-sm icon-white budget-icon" data-wallet="nagad"></span> Nagad — monthly spend limit (৳)</label>
-                <input type="number" id="budget-nagad" placeholder="e.g. 3000" inputmode="decimal" class="sheet-input text-sm font-semibold">
-            </div>
             <p class="text-[11px] leading-relaxed px-1" style="color:var(--text3)">Set a budget to see your monthly spending progress on each wallet card. Leave blank to hide.</p>
             <button onclick="saveBudgets()" class="shine-effect w-full py-4 rounded-xl font-bold text-sm tracking-wide shadow-lg btn-press" style="background:#fff;color:#1a0840">SAVE BUDGETS</button>
         </div>
@@ -2117,7 +2044,7 @@
 
     <!-- ============ LEND/BORROW LEDGER SHEET ============ -->
     <div id="lendLedgerSheet" class="bottom-sheet frosted-sheet fixed bottom-0 left-0 right-0 z-40 rounded-t-[32px] p-6 pb-10 max-w-md mx-auto" style="max-height:88vh;overflow-y:auto">
-        <div class="w-12 h-1 rounded-full mx-auto mb-5 cursor-pointer" style="background:rgba(255,255,255,0.1);transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);" onclick="closeSheet('lendLedgerSheet')" class="btn-press"></div>
+        <div class="w-12 h-1 rounded-full mx-auto mb-5 cursor-pointer btn-press" style="background:rgba(255,255,255,0.1);transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);" onclick="closeSheet('lendLedgerSheet')"></div>
         <div class="flex justify-between items-center mb-2">
             <div>
                 <h3 class="text-base font-semibold tracking-tight">Lend & Borrow</h3>
@@ -2145,7 +2072,7 @@
 
     <!-- ============ ABOUT SHEET ============ -->
     <div id="aboutSheet" class="bottom-sheet frosted-sheet fixed bottom-0 left-0 right-0 z-40 rounded-t-[32px] p-6 pb-10 max-w-md mx-auto" style="max-height:85vh;overflow-y:auto">
-        <div class="w-12 h-1 rounded-full mx-auto mb-5 cursor-pointer" style="background:rgba(255,255,255,0.1);transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);" onclick="closeSheet('aboutSheet')" class="btn-press"></div>
+        <div class="w-12 h-1 rounded-full mx-auto mb-5 cursor-pointer btn-press" style="background:rgba(255,255,255,0.1);transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);" onclick="closeSheet('aboutSheet')"></div>
         <div class="flex justify-between items-center mb-6">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 shrink-0"><svg viewBox="0 0 787.3 787.3" xmlns="http://www.w3.org/2000/svg" class="w-full h-full"><path fill="currentColor" d="m694.65,0H92.66C41.48,0,0,41.48,0,92.66v601.99c0,51.17,41.48,92.66,92.66,92.66h601.99c51.17,0,92.66-41.48,92.66-92.66V92.66c0-51.17-41.48-92.66-92.66-92.66Zm-360.6,634.25h-153.45V155.41h153.45v478.84Zm53.9,0v-180c10.19-1.76,20.66-2.69,31.35-2.69,100.89,0,182.69,81.79,182.69,182.69h-214.04Zm214.04-350.57l-214.04,138.5v-138.5l214.04-128.27v128.27Z"/></svg></div>
@@ -2169,7 +2096,7 @@
             <div class="flex flex-col gap-3">
                 <a href="https://www.instagram.com/air.dw/" target="_blank" rel="noreferrer noopener" class="inline-flex items-center justify-center gap-2 self-start rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-widest transition btn-press" style="border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#f472b6">Contact</a>
                 <div class="pt-2" style="border-top:1px solid rgba(255,255,255,0.05)">
-                    <p class="text-[11px] italic" style="color:rgba(255,255,255,0.3)">— Kash v1.81 (Beta) by <span style="color:rgba(255,255,255,0.5);font-weight:500">air.</span></p>
+                    <p class="text-[11px] italic" style="color:rgba(255,255,255,0.3)">— Kash v1.9 (Open Beta) by <span style="color:rgba(255,255,255,0.5);font-weight:500">air.</span></p>
                 </div>
             </div>
         </div>
@@ -2177,7 +2104,7 @@
 
     <!-- ============ DONATE SHEET ============ -->
     <div id="donateSheet" class="bottom-sheet frosted-sheet fixed bottom-0 left-0 right-0 z-40 rounded-t-[32px] p-6 pb-10 max-w-md mx-auto">
-        <div class="w-12 h-1 rounded-full mx-auto mb-5" style="background:rgba(255,255,255,0.1);transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);" onclick="closeSheet('donateSheet')" class="btn-press"></div>
+        <div class="w-12 h-1 rounded-full mx-auto mb-5 cursor-pointer btn-press" style="background:rgba(255,255,255,0.1);transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);" onclick="closeSheet('donateSheet')"></div>
         <div class="flex justify-between items-center mb-5">
             <h3 class="text-base font-semibold tracking-tight">Support Kash 💛</h3>
             <button onclick="closeSheet('donateSheet')" class="w-8 h-8 rounded-full flex items-center justify-center text-xs btn-press" style="background:rgba(255,255,255,0.05)">✕</button>
@@ -2207,7 +2134,7 @@
 
     <!-- ============ IMPORT SHEET ============ -->
     <div id="importSheet" class="bottom-sheet frosted-sheet fixed bottom-0 left-0 right-0 z-40 rounded-t-[32px] p-6 max-w-md mx-auto" style="max-height:80vh;overflow-y:auto">
-        <div class="w-12 h-1 rounded-full mx-auto mb-5 cursor-pointer" style="background:rgba(255,255,255,0.1);transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);" onclick="closeSheet('importSheet')" class="btn-press"></div>
+        <div class="w-12 h-1 rounded-full mx-auto mb-5 cursor-pointer btn-press" style="background:rgba(255,255,255,0.1);transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);" onclick="closeSheet('importSheet')"></div>
         <div class="flex justify-between items-center mb-5">
             <div>
                 <h3 class="text-base font-semibold tracking-tight">Import Ledger</h3>
@@ -2229,7 +2156,7 @@
 
     <!-- ============ WALLET SHEET ============ -->
     <div id="walletSheet" class="bottom-sheet frosted-sheet fixed bottom-0 left-0 right-0 z-40 rounded-t-[32px] p-6 max-w-md mx-auto" style="max-height:88vh;overflow-y:auto">
-        <div class="w-12 h-1 rounded-full mx-auto mb-5 cursor-pointer" style="background:rgba(255,255,255,0.1);transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);" onclick="closeSheet('walletSheet')" class="btn-press"></div>
+        <div class="w-12 h-1 rounded-full mx-auto mb-5 cursor-pointer btn-press" style="background:rgba(255,255,255,0.1);transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);" onclick="closeSheet('walletSheet')"></div>
         <div class="flex justify-between items-center mb-4">
             <div class="flex items-center gap-3">
                 <span class="icon icon-lg icon-white" id="walletSheetIcon"></span>
@@ -2293,6 +2220,48 @@
         <div id="walletHistoryContainer" class="space-y-2"></div>
     </div>
 
+    <!-- ============ ADD BANK SHEET ============ -->
+    <div id="addBankSheet" class="bottom-sheet frosted-sheet fixed bottom-0 left-0 right-0 z-40 rounded-t-[32px] p-6 pb-10 max-w-md mx-auto">
+        <div class="w-12 h-1 rounded-full mx-auto mb-5 cursor-pointer btn-press" style="background:rgba(255,255,255,0.1);" onclick="closeSheet('addBankSheet')"></div>
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h3 class="text-base font-semibold tracking-tight">Add Bank Account</h3>
+                <p class="text-[10px] uppercase tracking-widest font-bold mt-0.5" style="color:var(--text3)">Add a new bank wallet</p>
+            </div>
+            <button onclick="closeSheet('addBankSheet')" class="w-8 h-8 rounded-full flex items-center justify-center text-xs btn-press" style="background:rgba(255,255,255,0.05)">✕</button>
+        </div>
+        <div class="space-y-4">
+            <div class="sheet-input-wrap">
+                <label class="sheet-input-label">Bank Name</label>
+                <input type="text" id="newBankNameInput" placeholder="e.g. BRAC Bank, Dutch-Bangla…" maxlength="30" class="sheet-input text-sm font-bold" style="color:var(--text)">
+            </div>
+            <p class="text-[11px] leading-relaxed px-1" style="color:var(--text3)">This creates a separate bank wallet. You can track balances and transactions independently.</p>
+            <button onclick="addBankWallet()" class="shine-effect w-full py-4 rounded-xl font-bold text-sm tracking-wide shadow-lg btn-press" style="background:#fff;color:#1a0840">ADD BANK WALLET</button>
+        </div>
+    </div>
+
+    <!-- ============ RENAME WALLET SHEET ============ -->
+    <div id="renameWalletSheet" class="bottom-sheet frosted-sheet fixed bottom-0 left-0 right-0 z-40 rounded-t-[32px] p-6 pb-10 max-w-md mx-auto">
+        <div class="w-12 h-1 rounded-full mx-auto mb-5 cursor-pointer btn-press" style="background:rgba(255,255,255,0.1);" onclick="closeSheet('renameWalletSheet')"></div>
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h3 class="text-base font-semibold tracking-tight">Rename Wallet</h3>
+                <p class="text-[10px] uppercase tracking-widest font-bold mt-0.5" style="color:var(--text3)" id="renameWalletSubtitle">Change name</p>
+            </div>
+            <button onclick="closeSheet('renameWalletSheet')" class="w-8 h-8 rounded-full flex items-center justify-center text-xs btn-press" style="background:rgba(255,255,255,0.05)">✕</button>
+        </div>
+        <div class="space-y-4">
+            <div class="sheet-input-wrap">
+                <label class="sheet-input-label">New Name</label>
+                <input type="text" id="renameWalletInput" placeholder="Enter new name…" maxlength="30" class="sheet-input text-sm font-bold" style="color:var(--text)">
+            </div>
+            <div id="renameDeleteBankRow" style="display:none">
+                <button onclick="deleteBankWallet()" class="w-full py-3 rounded-xl font-bold text-xs btn-press" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);color:#f87171">DELETE THIS BANK WALLET</button>
+            </div>
+            <button onclick="saveWalletRename()" class="shine-effect w-full py-4 rounded-xl font-bold text-sm tracking-wide shadow-lg btn-press" style="background:#fff;color:#1a0840">SAVE NAME</button>
+        </div>
+    </div>
+
     <!-- ============ JAVASCRIPT ============ -->
     <script>
         // ==================== SVG ICONS ====================
@@ -2317,8 +2286,35 @@
         };
         const LOG_TYPE_ICONS = { bd: 'balance', income: 'income', expense: 'expense', lend: 'lent', borrow: 'borrow' };
         const FILTER_ICONS = { income: 'income', expense: 'expense', lend: 'lent', borrow: 'borrow', bd: 'balance' };
-        const WALLET_LABELS = { bank: 'Bank', cash: 'Cash', bkash: 'bKash', nagad: 'Nagad' };
-        const WALLET_COLORS = { bank: '#4ade80', cash: '#fbbf24', bkash: '#f472b6', nagad: '#fb923c' };
+        // Base (non-bank) wallet metadata
+        const BASE_WALLETS = { cash: 1, bkash: 1, nagad: 1 };
+        const WALLET_COLORS_DEFAULT = { bank: '#4ade80', cash: '#fbbf24', bkash: '#f472b6', nagad: '#fb923c' };
+
+        // Dynamic helpers that respect custom bank wallets
+        function getWalletLabel(id) {
+            if (appState.walletNames && appState.walletNames[id]) return appState.walletNames[id];
+            const base = { bank: 'Bank', cash: 'Cash', bkash: 'bKash', nagad: 'Nagad' };
+            return base[id] || id;
+        }
+        function getWalletColor(id) {
+            // All bank-type wallets get green; cash/bkash/nagad get their own colour
+            if (id === 'cash') return '#fbbf24';
+            if (id === 'bkash') return '#f472b6';
+            if (id === 'nagad') return '#fb923c';
+            return '#4ade80'; // bank + any extra bank wallets
+        }
+        function getWalletIconName(id) {
+            if (id === 'cash') return 'cash';
+            if (id === 'bkash') return 'bkash';
+            if (id === 'nagad') return 'nagad';
+            return 'bank';
+        }
+        function getAllWalletIds() {
+            return Object.keys(appState.wallets);
+        }
+        function isBankWallet(id) {
+            return id !== 'cash' && id !== 'bkash' && id !== 'nagad';
+        }
 
         function iconSvg(name) {
             const ic = ICONS[name];
@@ -2341,8 +2337,7 @@
             setIcon(document.getElementById('donateNagadIcon'), 'nagad');
             setIcon(document.getElementById('profileBtnIcon'), 'user');
             setIcon(document.getElementById('lendLedgerBtnIcon'), 'lent');
-            document.querySelectorAll('.wallet-icon').forEach(el => setIcon(el, el.dataset.wallet));
-            document.querySelectorAll('.budget-icon').forEach(el => setIcon(el, el.dataset.wallet));
+            // wallet-icon and budget-icon now handled dynamically by renderWalletGrid / renderBudgetSheet
             document.querySelectorAll('#filterChips .action-chip[data-filter]').forEach(chip => {
                 const iconEl = chip.querySelector('.chip-icon');
                 if (iconEl && FILTER_ICONS[chip.dataset.filter]) setIcon(iconEl, FILTER_ICONS[chip.dataset.filter]);
@@ -2456,25 +2451,40 @@
             const mainScroll = document.getElementById('mainScroll');
             const topBar = document.getElementById('topBar');
             let lastScrollY = 0;
+            let ticking = false;
+            let hideTimer = null;
 
             mainScroll.addEventListener('scroll', () => {
-                const currentScrollY = mainScroll.scrollTop;
-                if (currentScrollY > 80) {
-                    if (currentScrollY > lastScrollY) {
-                        topBar.classList.add('hidden');
-                    } else {
-                        topBar.classList.remove('hidden');
-                    }
-                } else {
-                    topBar.classList.remove('hidden');
-                }
-                lastScrollY = currentScrollY;
+                if (!ticking) {
+                    requestAnimationFrame(() => {
+                        const currentScrollY = mainScroll.scrollTop;
+                        const delta = currentScrollY - lastScrollY;
 
-                if (particleSystem) {
-                    const maxScroll = mainScroll.scrollHeight - mainScroll.clientHeight;
-                    const scrollPercent = maxScroll > 0 ? currentScrollY / maxScroll : 0;
-                    const factor = 0.5 + scrollPercent * 2.0;
-                    particleSystem.setWindFactor(factor);
+                        if (currentScrollY > 60) {
+                            if (delta > 4) {
+                                // Scrolling down — hide after small threshold
+                                if (hideTimer) clearTimeout(hideTimer);
+                                hideTimer = setTimeout(() => topBar.classList.add('hidden'), 60);
+                            } else if (delta < -4) {
+                                // Scrolling up — show immediately
+                                if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+                                topBar.classList.remove('hidden');
+                            }
+                        } else {
+                            if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+                            topBar.classList.remove('hidden');
+                        }
+                        lastScrollY = currentScrollY;
+                        ticking = false;
+
+                        if (particleSystem) {
+                            const maxScroll = mainScroll.scrollHeight - mainScroll.clientHeight;
+                            const scrollPercent = maxScroll > 0 ? currentScrollY / maxScroll : 0;
+                            const factor = 0.5 + scrollPercent * 2.0;
+                            particleSystem.setWindFactor(factor);
+                        }
+                    });
+                    ticking = true;
                 }
             }, { passive: true });
         }
@@ -2488,6 +2498,7 @@
             userName: '',
             budgets: { bank: 0, cash: 0, bkash: 0, nagad: 0 },
             walletMeta: { bank: { monthlyInterest: 0, lastInterestMonth: null } },
+            walletNames: {}, // custom display names keyed by wallet id
             theme: 'dark'
         };
         let activeFilter = 'all';
@@ -2495,38 +2506,50 @@
         let currentWalletSheet = 'bank';
         let bankActionsOpen = false;
         let dtOpen = false;
+        let renamingWalletId = null;
 
         function saveState() { localStorage.setItem('kash_v6_state', JSON.stringify(appState)); }
 
         function loadState() {
             const saved = localStorage.getItem('kash_v6_state');
             const savedV5 = localStorage.getItem('aura_asset_desk_state_v5');
-            if (saved) { try { appState = { ...appState, ...JSON.parse(saved) }; } catch (e) {} } else if (savedV5) { try {
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    appState = { ...appState, ...parsed };
+                    // Ensure required keys exist
+                    if (!appState.walletNames) appState.walletNames = {};
+                    if (!appState.wallets.cash && appState.wallets.cash !== 0) appState.wallets.cash = 0;
+                    if (!appState.wallets.bkash && appState.wallets.bkash !== 0) appState.wallets.bkash = 0;
+                    if (!appState.wallets.nagad && appState.wallets.nagad !== 0) appState.wallets.nagad = 0;
+                    if (!appState.wallets.bank && appState.wallets.bank !== 0) appState.wallets.bank = 0;
+                } catch (e) {}
+            } else if (savedV5) {
+                try {
                     const v5 = JSON.parse(savedV5);
                     appState.logs = v5.logs || [];
                     appState.userName = v5.userName || '';
                     showToast('Data migrated from Kash v1');
-                } catch (e) {} }
+                } catch (e) {}
+            }
             if (!appState.walletMeta) appState.walletMeta = { bank: { monthlyInterest: 0, lastInterestMonth: null } };
+            if (!appState.walletNames) appState.walletNames = {};
         }
 
         // ==================== THEME ====================
         function toggleTheme() {
-            appState.theme = appState.theme === 'dark' ? 'light' : 'dark';
-            applyTheme();
-            saveState();
+            // Theme switching disabled — locked to dark mode
         }
 
         function updateThemeIcon() {
-            const span = document.getElementById('themeBtnIcon');
-            if (span) setIcon(span, appState.theme === 'light' ? 'light_mode' : 'dark_mode');
+            // No theme icon needed
         }
 
         function applyTheme() {
-            document.body.classList.toggle('light-mode', appState.theme === 'light');
-            updateThemeIcon();
+            appState.theme = 'dark';
+            document.body.classList.remove('light-mode');
             document.querySelectorAll('#logDate, #logTime').forEach(el => {
-                el.style.colorScheme = appState.theme === 'light' ? 'light' : 'dark';
+                el.style.colorScheme = 'dark';
             });
         }
 
@@ -2714,20 +2737,40 @@
             triggerHaptic('tick');
             currentWalletSheet = walletId;
             selectActiveWallet(walletId);
-            document.getElementById('walletSheetTitle').textContent = WALLET_LABELS[walletId];
+            document.getElementById('walletSheetTitle').textContent = getWalletLabel(walletId);
             document.getElementById('walletSheetBalance').textContent = formatBDT(appState.wallets[walletId] || 0);
-            setIcon(document.getElementById('walletSheetIcon'), walletId);
+            const iconEl = document.getElementById('walletSheetIcon');
+            setIcon(iconEl, getWalletIconName(walletId));
 
             const bankWrapper = document.getElementById('bankActionsWrapper');
             const disbursementWrapper = document.getElementById('disbursementWrapper');
-            bankWrapper.style.display = walletId === 'bank' ? 'block' : 'none';
+            bankWrapper.style.display = isBankWallet(walletId) ? 'block' : 'none';
             disbursementWrapper.style.display = (walletId === 'bkash' || walletId === 'nagad') ? 'block' : 'none';
 
-            if (walletId === 'bank') {
-                const val = appState.walletMeta?.bank?.monthlyInterest || 0;
+            // Update bank actions header to show wallet name
+            const bankActionsTitle = document.getElementById('bankActionsToggle');
+            if (bankActionsTitle) bankActionsTitle.querySelector('span:first-child').textContent = `🏦 ${getWalletLabel(walletId)} Actions`;
+
+            if (isBankWallet(walletId)) {
+                const meta = appState.walletMeta[walletId];
+                const val = meta?.monthlyInterest || 0;
                 document.getElementById('bankMonthlyInterest').value = val || '';
                 if (bankActionsOpen) toggleBankActions();
             }
+
+            // Show rename button in wallet sheet header
+            let renameBtn = document.getElementById('walletRenameBtn');
+            if (!renameBtn) {
+                renameBtn = document.createElement('button');
+                renameBtn.id = 'walletRenameBtn';
+                renameBtn.className = 'btn-press';
+                renameBtn.style.cssText = 'font-size:10px;font-weight:700;color:rgba(167,139,250,0.7);background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.25);border-radius:99px;padding:2px 9px;transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1);cursor:pointer';
+                renameBtn.textContent = 'Rename';
+                renameBtn.onclick = () => openRenameWalletSheet(currentWalletSheet);
+                const headerRow = document.querySelector('#walletSheet .flex.justify-between');
+                if (headerRow) headerRow.insertBefore(renameBtn, headerRow.querySelector('button'));
+            }
+            renameBtn.style.display = '';
 
             renderWalletHistory(walletId);
             openSheet('walletSheet');
@@ -2761,14 +2804,15 @@
         // ==================== BANK ACTIONS ====================
         function saveBankMonthlyInterest() {
             const val = parseFloat(document.getElementById('bankMonthlyInterest').value) || 0;
-            if (!appState.walletMeta) appState.walletMeta = { bank: {} };
-            if (!appState.walletMeta.bank) appState.walletMeta.bank = {};
-            appState.walletMeta.bank.monthlyInterest = val;
+            const wid = currentWalletSheet;
+            if (!appState.walletMeta) appState.walletMeta = {};
+            if (!appState.walletMeta[wid]) appState.walletMeta[wid] = {};
+            appState.walletMeta[wid].monthlyInterest = val;
             saveState();
             checkMonthlyBankInterest();
-            if (currentWalletSheet === 'bank') {
-                document.getElementById('walletSheetBalance').textContent = formatBDT(appState.wallets.bank);
-                renderWalletHistory('bank');
+            if (currentWalletSheet === wid) {
+                document.getElementById('walletSheetBalance').textContent = formatBDT(appState.wallets[wid] || 0);
+                renderWalletHistory(wid);
             }
             showToast(val ? 'Monthly interest saved' : 'Monthly interest cleared');
             triggerHaptic('success');
@@ -2777,16 +2821,16 @@
         function logBankInterest() {
             const amount = Math.abs(parseFloat(document.getElementById('bankInterestOnce')?.value) || 0);
             if (!amount) { showToast('Enter an interest amount'); return; }
-            addWalletLog('bank', 'income', amount, 'Bank Interest');
+            addWalletLog(currentWalletSheet, 'income', amount, `${getWalletLabel(currentWalletSheet)} Interest`);
             document.getElementById('bankInterestOnce').value = '';
         }
 
         function logBankCharges() {
             const amount = Math.abs(parseFloat(document.getElementById('bankChargesAmount')?.value) || 0);
             if (!amount) { showToast('Enter a charge amount'); return; }
-            const bal = appState.wallets.bank || 0;
+            const bal = appState.wallets[currentWalletSheet] || 0;
             if (amount > bal) { showToast(`Insufficient balance (${formatBDT(bal)})`); return; }
-            addWalletLog('bank', 'expense', amount, 'Bank Charges');
+            addWalletLog(currentWalletSheet, 'expense', amount, `${getWalletLabel(currentWalletSheet)} Charges`);
             document.getElementById('bankChargesAmount').value = '';
         }
 
@@ -2825,14 +2869,16 @@
         }
 
         function checkMonthlyBankInterest() {
-            const meta = appState.walletMeta?.bank;
-            if (!meta || !meta.monthlyInterest) return;
             const now = new Date();
             const monthKey = `${now.getFullYear()}-${now.getMonth()}`;
-            if (meta.lastInterestMonth === monthKey) return;
-            addWalletLog('bank', 'income', meta.monthlyInterest, 'Bank Interest (Monthly)');
-            meta.lastInterestMonth = monthKey;
-            saveState();
+            getAllWalletIds().filter(isBankWallet).forEach(wid => {
+                const meta = appState.walletMeta?.[wid];
+                if (!meta || !meta.monthlyInterest) return;
+                if (meta.lastInterestMonth === monthKey) return;
+                addWalletLog(wid, 'income', meta.monthlyInterest, `${getWalletLabel(wid)} Interest (Monthly)`);
+                meta.lastInterestMonth = monthKey;
+                saveState();
+            });
         }
 
         const walletGlowTimers = {};
@@ -2850,12 +2896,29 @@
 
         // ==================== WALLET SELECTION ====================
         function selectActiveWallet(walletId) {
-            triggerHaptic('tick');
-            document.querySelectorAll('.wallet-card').forEach(c => c.classList.remove('wallet-glow-bank', 'wallet-glow-cash',
-                'wallet-glow-bkash', 'wallet-glow-nagad'));
-            document.getElementById(`walletCard-${walletId}`).classList.add(`wallet-glow-${walletId}`);
+            // Remove all wallet glow classes
+            document.querySelectorAll('.wallet-card').forEach(c => {
+                c.className = c.className.replace(/wallet-glow-\S+/g, '').trim();
+            });
+            const card = document.getElementById(`walletCard-${walletId}`);
+            if (card) {
+                const glowClass = isBankWallet(walletId) ? 'wallet-glow-bank' : `wallet-glow-${walletId}`;
+                card.classList.add(glowClass);
+            }
             appState.currentWallet = walletId;
-            document.getElementById('logWallet').value = walletId;
+            // Sync log sheet wallet dropdown
+            const sel = document.getElementById('logWallet');
+            if (sel) {
+                // Check if option exists, if not add it
+                let opt = sel.querySelector(`option[value="${walletId}"]`);
+                if (!opt) {
+                    opt = document.createElement('option');
+                    opt.value = walletId;
+                    opt.textContent = getWalletLabel(walletId);
+                    sel.appendChild(opt);
+                }
+                sel.value = walletId;
+            }
         }
 
         // ==================== LOG TYPE (with smooth transitions) ====================
@@ -3005,16 +3068,21 @@
 
         // ==================== CALCULATE METRICS ====================
         function calculateMetrics() {
-            appState.wallets = { bank: 0, cash: 0, bkash: 0, nagad: 0 };
+            // Preserve wallet keys, just zero balances
+            const ids = getAllWalletIds();
+            ids.forEach(id => { appState.wallets[id] = 0; });
             const ordered = [...appState.logs].reverse();
             ordered.forEach(log => {
                 const amt = Number(log.amount);
-                if (log.type === 'bd') appState.wallets[log.wallet] = amt;
-                else if (log.type === 'income') appState.wallets[log.wallet] += amt;
-                else if (log.type === 'expense') appState.wallets[log.wallet] -= amt;
-                else if (log.type === 'lend' && !log.settled) appState.wallets[log.wallet] -= amt;
-                else if (log.type === 'borrow' && !log.settled) appState.wallets[log.wallet] += amt;
+                const w = log.wallet;
+                if (!(w in appState.wallets)) appState.wallets[w] = 0; // auto-register unknown wallets
+                if (log.type === 'bd') appState.wallets[w] = amt;
+                else if (log.type === 'income') appState.wallets[w] += amt;
+                else if (log.type === 'expense') appState.wallets[w] -= amt;
+                else if (log.type === 'lend' && !log.settled) appState.wallets[w] -= amt;
+                else if (log.type === 'borrow' && !log.settled) appState.wallets[w] += amt;
             });
+            renderWalletGrid();
             renderAllWallets();
             renderMonthlyStats();
             renderStreaks();
@@ -3023,18 +3091,99 @@
             updatePendingDot();
         }
 
+        // ==================== RENDER WALLET GRID (dynamic) ====================
+        function renderWalletGrid() {
+            const grid = document.getElementById('walletGrid');
+            if (!grid) return;
+            const ids = getAllWalletIds();
+            // Rebuild the grid HTML
+            grid.innerHTML = '';
+            ids.forEach(wid => {
+                const label = getWalletLabel(wid);
+                const color = getWalletColor(wid);
+                const iconName = getWalletIconName(wid);
+                const isBankType = isBankWallet(wid);
+                const sub = isBankType ? 'Balance' : wid === 'cash' ? 'On hand' : 'Mobile';
+                const budgetGrad = isBankType ? 'linear-gradient(90deg,#4ade80,#22c55e)'
+                    : wid === 'cash' ? 'linear-gradient(90deg,#fbbf24,#f59e0b)'
+                    : wid === 'bkash' ? 'linear-gradient(90deg,#f472b6,#ec4899)'
+                    : 'linear-gradient(90deg,#fb923c,#f97316)';
+                const glowColor = isBankType ? 'rgba(52,199,89,0.28)'
+                    : wid === 'cash' ? 'rgba(245,158,11,0.28)'
+                    : wid === 'bkash' ? 'rgba(236,72,153,0.28)'
+                    : 'rgba(249,115,22,0.28)';
+
+                const card = document.createElement('div');
+                card.onclick = () => openWalletSheet(wid);
+                card.id = `walletCard-${wid}`;
+                card.className = 'wallet-card activity-card hover-lift';
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="activity-card-label" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:90px">${label}</div>
+                            <div class="activity-card-sub">${sub}</div>
+                        </div>
+                        <span class="icon icon-lg icon-white" style="flex-shrink:0">${iconSvg(iconName)}</span>
+                    </div>
+                    <div class="mt-auto pt-2">
+                        <span class="activity-card-value card-value ticker-num" id="bal-${wid}">৳ 0</span>
+                        <div id="budget-bar-${wid}" style="display:none;margin-top:8px">
+                            <div class="progress-track"><div class="progress-fill" id="budget-fill-${wid}" style="background:${budgetGrad};width:0%"></div></div>
+                            <div style="font-size:9px;font-weight:600;color:rgba(255,255,255,0.3);margin-top:3px" id="budget-label-${wid}"></div>
+                        </div>
+                    </div>
+                    <div class="activity-card-glow" style="background:${glowColor}"></div>`;
+                grid.appendChild(card);
+            });
+            // Re-apply active wallet glow
+            const cur = appState.currentWallet || 'bank';
+            const activeCard = document.getElementById(`walletCard-${cur}`);
+            if (activeCard) {
+                const glowClass = isBankWallet(cur) ? 'wallet-glow-bank' : `wallet-glow-${cur}`;
+                activeCard.classList.add(glowClass);
+            }
+            // Sync CSS dynamic glow colours for custom bank wallets
+            document.querySelectorAll('.wallet-card').forEach(c => {
+                const wid = c.id.replace('walletCard-', '');
+                if (!document.getElementById(`#walletCard-${wid}::after`)) {
+                    // dynamic after pseudo colours applied via inline on the card
+                }
+            });
+        }
+
         function renderAllWallets() {
             let grand = 0;
-            Object.keys(appState.wallets).forEach(w => { grand += appState.wallets[w];
-                document.getElementById(`bal-${w}`).textContent = formatBDT(appState.wallets[w]); });
+            getAllWalletIds().forEach(w => {
+                grand += appState.wallets[w] || 0;
+                const el = document.getElementById(`bal-${w}`);
+                if (el) el.textContent = formatBDT(appState.wallets[w] || 0);
+            });
             document.getElementById('combinedAssetsTotal').textContent = `Total: ${formatBDT(grand)}`;
             renderBudgetBars();
+            renderLogWalletOptions();
+        }
+
+        function renderLogWalletOptions() {
+            const sel = document.getElementById('logWallet');
+            if (!sel) return;
+            const cur = sel.value;
+            sel.innerHTML = '';
+            getAllWalletIds().forEach(wid => {
+                const opt = document.createElement('option');
+                opt.value = wid;
+                opt.textContent = getWalletLabel(wid);
+                sel.appendChild(opt);
+            });
+            // Restore selection
+            if (cur && sel.querySelector(`option[value="${cur}"]`)) sel.value = cur;
+            else sel.value = appState.currentWallet || 'bank';
         }
 
         // ==================== BUDGETS ====================
         function saveBudgets() {
-            ['bank', 'cash', 'bkash', 'nagad'].forEach(w => {
-                const val = parseFloat(document.getElementById(`budget-${w}`).value) || 0;
+            getAllWalletIds().forEach(w => {
+                const inp = document.getElementById(`budget-${w}`);
+                const val = inp ? (parseFloat(inp.value) || 0) : 0;
                 appState.budgets[w] = val;
             });
             saveState();
@@ -3044,15 +3193,29 @@
         }
 
         function loadBudgetInputs() {
-            ['bank', 'cash', 'bkash', 'nagad'].forEach(w => {
-                const inp = document.getElementById(`budget-${w}`);
-                if (inp) inp.value = appState.budgets[w] || '';
+            // Render budget inputs dynamically
+            const container = document.getElementById('budgetInputs');
+            if (!container) return;
+            // Keep the last <p> and Save button; rebuild wallet inputs
+            const staticNodes = Array.from(container.children).filter(el => el.tagName === 'P' || el.tagName === 'BUTTON');
+            container.innerHTML = '';
+            getAllWalletIds().forEach(w => {
+                const div = document.createElement('div');
+                div.className = 'sheet-input-wrap';
+                div.innerHTML = `
+                    <label class="sheet-input-label flex items-center gap-2">
+                        <span class="icon icon-sm icon-white" style="width:11px;height:11px">${iconSvg(getWalletIconName(w))}</span>
+                        ${getWalletLabel(w)} — monthly spend limit (৳)
+                    </label>
+                    <input type="number" id="budget-${w}" placeholder="e.g. 5000" inputmode="decimal" class="sheet-input text-sm font-semibold" value="${appState.budgets[w] || ''}">`;
+                container.appendChild(div);
             });
+            staticNodes.forEach(n => container.appendChild(n));
         }
 
         function renderBudgetBars() {
             const now = new Date();
-            ['bank', 'cash', 'bkash', 'nagad'].forEach(w => {
+            getAllWalletIds().forEach(w => {
                 const budget = appState.budgets[w] || 0;
                 const bar = document.getElementById(`budget-bar-${w}`);
                 if (!bar) return;
@@ -3068,13 +3231,16 @@
                 const pct = Math.min((spent / budget) * 100, 100);
                 bar.style.display = '';
                 const fill = document.getElementById(`budget-fill-${w}`);
-                fill.style.width = pct + '%';
-                if (pct >= 90) fill.style.background = 'linear-gradient(90deg,#f87171,#ef4444)';
-                else if (pct >= 70) fill.style.background = 'linear-gradient(90deg,#fbbf24,#f59e0b)';
+                if (fill) {
+                    fill.style.width = pct + '%';
+                    if (pct >= 90) fill.style.background = 'linear-gradient(90deg,#f87171,#ef4444)';
+                    else if (pct >= 70) fill.style.background = 'linear-gradient(90deg,#fbbf24,#f59e0b)';
+                }
                 const label = document.getElementById(`budget-label-${w}`);
-                label.textContent = `${formatBDT(spent)} of ${formatBDT(budget)} (${Math.round(pct)}%)`;
-                if (pct >= 90) label.style.color = '#f87171';
-                else label.style.color = 'rgba(255,255,255,0.3)';
+                if (label) {
+                    label.textContent = `${formatBDT(spent)} of ${formatBDT(budget)} (${Math.round(pct)}%)`;
+                    label.style.color = pct >= 90 ? '#f87171' : 'rgba(255,255,255,0.3)';
+                }
             });
         }
 
@@ -3325,7 +3491,7 @@
                 <div class="icon icon-md ${walletIconClass}" style="width:40px;height:40px;border-radius:14px;border:1px solid;padding:8px;flex-shrink:0">${iconSvg(iconName)}</div>
                 <div style="flex:1;min-width:0">
                     <div class="entry-title" style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.88);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${log.note}</div>
-                    <div class="entry-meta" style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.06em;margin-top:2px">${log.wallet} · ${log.date} ${timeStr ? '· '+timeStr : ''}</div>
+                    <div class="entry-meta" style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.06em;margin-top:2px">${getWalletLabel(log.wallet)} · ${log.date} ${timeStr ? '· '+timeStr : ''}</div>
                     ${interestBadge}${settledBadge}${settleBtn}
                 </div>
                 <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0">
@@ -3557,12 +3723,91 @@
         function clearAllDataPrompt() {
             if (confirm('Reset all Kash data? This cannot be undone.')) {
                 appState.logs = [];
-                appState.wallets = { bank: 0, cash: 0, bkash: 0, nagad: 0 };
+                // Reset balances for all current wallets (keep wallet structure)
+                getAllWalletIds().forEach(w => { appState.wallets[w] = 0; });
                 calculateMetrics();
                 renderActivityFeed();
                 saveState();
                 showToast('Reset complete');
             }
+        }
+
+        // ==================== ADD BANK WALLET ====================
+        function openAddBankSheet() {
+            triggerHaptic('tick');
+            document.getElementById('newBankNameInput').value = '';
+            openSheet('addBankSheet');
+        }
+
+        function addBankWallet() {
+            const name = document.getElementById('newBankNameInput').value.trim();
+            if (!name) { showToast('Enter a bank name'); return; }
+            // Generate a unique id like bank_2, bank_3...
+            const existingBankIds = getAllWalletIds().filter(isBankWallet);
+            let newId;
+            if (!appState.wallets.bank && appState.wallets.bank !== 0) {
+                newId = 'bank';
+            } else {
+                let n = 2;
+                while (appState.wallets[`bank${n}`] !== undefined) n++;
+                newId = `bank${n}`;
+            }
+            appState.wallets[newId] = 0;
+            if (!appState.walletNames) appState.walletNames = {};
+            appState.walletNames[newId] = name;
+            if (!appState.budgets) appState.budgets = {};
+            appState.budgets[newId] = 0;
+            saveState();
+            renderWalletGrid();
+            renderAllWallets();
+            closeSheet('addBankSheet');
+            showToast(`${name} wallet added!`);
+            triggerHaptic('success');
+        }
+
+        // ==================== RENAME / DELETE WALLET ====================
+        function openRenameWalletSheet(walletId) {
+            renamingWalletId = walletId;
+            document.getElementById('renameWalletInput').value = getWalletLabel(walletId);
+            document.getElementById('renameWalletSubtitle').textContent = `Currently: ${getWalletLabel(walletId)}`;
+            // Show delete option only for extra bank wallets (not the 4 core wallets)
+            const isExtraBank = isBankWallet(walletId) && walletId !== 'bank';
+            document.getElementById('renameDeleteBankRow').style.display = isExtraBank ? '' : 'none';
+            closeSheet('walletSheet');
+            openSheet('renameWalletSheet');
+        }
+
+        function saveWalletRename() {
+            const name = document.getElementById('renameWalletInput').value.trim();
+            if (!name) { showToast('Enter a name'); return; }
+            if (!appState.walletNames) appState.walletNames = {};
+            appState.walletNames[renamingWalletId] = name;
+            saveState();
+            renderWalletGrid();
+            renderAllWallets();
+            loadBudgetInputs();
+            closeSheet('renameWalletSheet');
+            showToast('Wallet renamed!');
+            triggerHaptic('success');
+        }
+
+        function deleteBankWallet() {
+            const wid = renamingWalletId;
+            if (!wid || !isBankWallet(wid) || wid === 'bank') { showToast('Cannot delete this wallet'); return; }
+            if (!confirm(`Delete "${getWalletLabel(wid)}" wallet? All its data will be removed.`)) return;
+            // Remove logs for this wallet
+            appState.logs = appState.logs.filter(l => l.wallet !== wid);
+            delete appState.wallets[wid];
+            if (appState.walletNames) delete appState.walletNames[wid];
+            if (appState.budgets) delete appState.budgets[wid];
+            if (appState.walletMeta) delete appState.walletMeta[wid];
+            if (appState.currentWallet === wid) appState.currentWallet = 'bank';
+            saveState();
+            calculateMetrics();
+            renderActivityFeed();
+            closeSheet('renameWalletSheet');
+            showToast('Bank wallet deleted');
+            triggerHaptic('success');
         }
 
         // ==================== INIT ====================
@@ -3576,6 +3821,8 @@
             document.getElementById('logDate').value = getDefaultDate();
             document.getElementById('logTime').value = getDefaultTime();
 
+            renderWalletGrid();
+            renderLogWalletOptions();
             checkMonthlyBankInterest();
             const now = new Date();
             document.getElementById('liveDate').textContent = now.toLocaleDateString('en-US', { weekday: 'long',
